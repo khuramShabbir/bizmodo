@@ -7,6 +7,7 @@ import 'package:hungerz_ordering/Locale/locales.dart';
 import 'package:hungerz_ordering/Pages/item_info.dart';
 import 'package:hungerz_ordering/Pages/orderPlaced.dart';
 import 'package:hungerz_ordering/Theme/colors.dart';
+import 'package:hungerz_ordering/utils.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -41,12 +42,6 @@ class CartItem {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<CartItem> cartItems = [
-    CartItem('Veg Sandwich', 'assets/food items/food1.jpg', '5.00', 1, ['Extra Cheese'], true),
-    CartItem('Fried Chicken', 'assets/food items/food2.jpg', '7.00', 1, [], false),
-    CartItem('Watermelon Juice', 'assets/food items/food3.jpg', '4.50', 1, [], true),
-  ];
-
   PageController _pageController = PageController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -93,9 +88,10 @@ class _HomePageState extends State<HomePage> {
                           ListView.builder(
                               physics: NeverScrollableScrollPhysics(),
                               padding: EdgeInsets.only(bottom: 150),
-                              itemCount: 3,
+                              itemCount: allProductsCtrl.itemsInCartList.length,
                               shrinkWrap: true,
                               itemBuilder: (context, index) {
+                                final data = allProductsCtrl.itemsInCartList[index];
                                 return Column(
                                   children: [
                                     ListTile(
@@ -106,8 +102,8 @@ class _HomePageState extends State<HomePage> {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) => ItemInfoPage(
-                                                  cartItems[index].image, cartItems[index].name),
+                                              builder: (context) =>
+                                                  ItemInfoPage(data.imageUrl, data.name),
                                             ),
                                           );
                                         },
@@ -115,7 +111,7 @@ class _HomePageState extends State<HomePage> {
                                           ClipRRect(
                                             borderRadius: BorderRadius.circular(8),
                                             child: FadedScaleAnimation(
-                                              Image.asset(cartItems[index].image),
+                                              Image.network(data.imageUrl),
                                               durationInMilliseconds: 400,
                                             ),
                                           ),
@@ -128,20 +124,16 @@ class _HomePageState extends State<HomePage> {
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             Text(
-                                              cartItems[index].name,
+                                              data.name,
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .subtitle1!
                                                   .copyWith(fontSize: 14),
                                             ),
-                                            SizedBox(
-                                              width: 8,
-                                            ),
+                                            SizedBox(width: 8),
                                             FadedScaleAnimation(
                                               Image.asset(
-                                                cartItems[index].isVeg
-                                                    ? 'assets/ic_veg.png'
-                                                    : 'assets/ic_nonveg.png',
+                                                'assets/ic_veg.png',
                                                 height: 12,
                                               ),
                                               durationInMilliseconds: 400,
@@ -164,12 +156,7 @@ class _HomePageState extends State<HomePage> {
                                                   mainAxisSize: MainAxisSize.min,
                                                   children: [
                                                     GestureDetector(
-                                                        onTap: () {
-                                                          if (cartItems[index].count > 1)
-                                                            setState(() {
-                                                              cartItems[index].count--;
-                                                            });
-                                                        },
+                                                        onTap: () {},
                                                         child: Icon(
                                                           Icons.remove,
                                                           color: newOrderColor,
@@ -178,22 +165,12 @@ class _HomePageState extends State<HomePage> {
                                                     SizedBox(
                                                       width: 8,
                                                     ),
-                                                    Text(
-                                                      cartItems[index].count.toString(),
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .subtitle1!
-                                                          .copyWith(fontSize: 12),
-                                                    ),
+                                                    Text(""),
                                                     SizedBox(
                                                       width: 8,
                                                     ),
                                                     GestureDetector(
-                                                        onTap: () {
-                                                          setState(() {
-                                                            cartItems[index].count++;
-                                                          });
-                                                        },
+                                                        onTap: () {},
                                                         child: Icon(
                                                           Icons.add,
                                                           color: newOrderColor,
@@ -204,7 +181,9 @@ class _HomePageState extends State<HomePage> {
                                               ),
                                               Spacer(),
                                               Text(
-                                                '\$' + cartItems[index].price,
+                                                '\$' +
+                                                    data.productVariations.first.variations.first
+                                                        .sellPriceIncTax,
                                                 style: TextStyle(color: Colors.black),
                                               )
                                             ],
@@ -223,7 +202,10 @@ class _HomePageState extends State<HomePage> {
                                                           .copyWith(fontSize: 14),
                                                     ),
                                                     Spacer(),
-                                                    Text('\$' + cartItems[index].price,
+                                                    Text(
+                                                        '\$' +
+                                                            data.productVariations.first.variations
+                                                                .first.sellPriceIncTax,
                                                         style: TextStyle(color: Colors.black))
                                                   ],
                                                 )
