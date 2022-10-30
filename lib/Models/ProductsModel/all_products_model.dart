@@ -11,12 +11,12 @@ class AllProducts {
     required this.meta,
   });
 
-  List<Datum> data;
+  List<Products> data;
   Links links;
   Meta meta;
 
   factory AllProducts.fromJson(Map<String, dynamic> json) => AllProducts(
-        data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+        data: List<Products>.from(json["data"].map((x) => Products.fromJson(x))),
         links: Links.fromJson(json["links"]),
         meta: Meta.fromJson(json["meta"]),
       );
@@ -28,8 +28,8 @@ class AllProducts {
       };
 }
 
-class Datum {
-  Datum({
+class Products {
+  Products({
     required this.id,
     required this.name,
     required this.businessId,
@@ -97,7 +97,7 @@ class Datum {
   ProductTax productTax;
   List<ProductLocation> productLocations;
 
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+  factory Products.fromJson(Map<String, dynamic> json) => Products(
         id: json["id"],
         name: json["name"],
         businessId: json["business_id"],

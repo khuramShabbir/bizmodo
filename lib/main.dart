@@ -52,7 +52,6 @@ class HungerzOrdering extends StatelessWidget {
             locale: locale,
             theme: appTheme,
             home: Settings(),
-            // TableSelectionPage(),
             routes: PageRoutes().routes(),
           );
         },

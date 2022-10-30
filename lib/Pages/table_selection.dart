@@ -77,10 +77,10 @@ class _TableSelectionPageState extends State<TableSelectionPage> {
               Tables data = tableCtrl.tableDetailModel[index].tables;
               return Obx(() => GestureDetector(
                     onTap: () async {
-                      if (data.available == "Busy") {
-                        showToast("Please choose Free table");
-                        return;
-                      }
+                      // if (data.available == "Busy") {
+                      //   showToast("Please choose Free table");
+                      //   return;
+                      // }
                       data.color = 0xFFFFFF00;
                       setState(() {});
                       TableDetail tables = TableDetail(

@@ -5,13 +5,23 @@ import 'package:hungerz_ordering/Services/api_urls.dart';
 
 class AllProductsController extends GetxController {
   /// models
-  Rx<AllProducts>? allProducts;
+  AllProducts? allProducts;
 
+  RxList<Products> itemsInCartList = <Products>[].obs;
+  RxBool isLoaded = false.obs;
+  RxBool itemSelected = false.obs;
+  RxString? img, name;
+  RxInt drawerCount = 0.obs;
+  RxInt currentIndex = 0.obs;
+  int selectedItem = -1.obs;
   void getAllProducts() async {
+    isLoaded = false.obs;
+
     String response = await ApiServices.getMethod(feedUrl: ApiUrls.allProducts);
 
     if (response.isEmpty) return;
 
-    allProducts = allProductsFromJson(response).obs;
+    allProducts = allProductsFromJson(response);
+    isLoaded.value = true;
   }
 }

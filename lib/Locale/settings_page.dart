@@ -4,7 +4,10 @@ import 'package:get/get.dart';
 import 'package:hungerz_ordering/Components/bottom_bar.dart';
 import 'package:hungerz_ordering/Config/app_config.dart';
 import 'package:hungerz_ordering/Controllers/Auth%20Controller/auth_controller.dart';
+import 'package:hungerz_ordering/Controllers/ProductController/all_products_controller.dart';
+import 'package:hungerz_ordering/Controllers/TableSelectionController/table_management_controller.dart';
 import 'package:hungerz_ordering/Routes/routes.dart';
+import 'package:hungerz_ordering/Services/storage_sevices.dart';
 import 'package:hungerz_ordering/Theme/colors.dart';
 
 import 'language_cubit.dart';
@@ -88,9 +91,16 @@ class _SettingsState extends State<Settings> {
                 onTap: () {
                   _languageCubit.setCurrentLanguage(selectedLocal!, true);
 
-                  Get.put(AuthController());
+                  if (AppStorage.box.hasData(AppStorage.token)) {
+                    Get.put(TableSelectionController());
+                    // Get.put(AllProductsController());
 
-                  Navigator.pushNamed(context, PageRoutes.loginPage);
+                    Navigator.pushNamed(context, PageRoutes.tableSelectionPage);
+                  } else {
+                    Get.put(AuthController());
+
+                    Navigator.pushNamed(context, PageRoutes.loginPage);
+                  }
                 }),
           ),
         ],
