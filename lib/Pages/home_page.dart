@@ -344,6 +344,7 @@ class _HomePageState extends State<HomePage> {
           buildItemsInCartButton(context)
         ],
       ),
+      //
       body: Container(
         color: Theme.of(context).backgroundColor,
         child: Row(
