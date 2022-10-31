@@ -1,7 +1,10 @@
 import 'package:get/get.dart';
+import 'package:hungerz_ordering/Config/app_config.dart';
 import 'package:hungerz_ordering/Models/ProductsModel/all_products_model.dart';
 import 'package:hungerz_ordering/Services/api_services.dart';
 import 'package:hungerz_ordering/Services/api_urls.dart';
+import 'package:hungerz_ordering/const.dart';
+import 'package:hungerz_ordering/utils.dart';
 
 class AllProductsController extends GetxController {
   /// models
@@ -14,6 +17,16 @@ class AllProductsController extends GetxController {
   RxInt drawerCount = 0.obs;
   RxInt currentIndex = 0.obs;
   int selectedItem = -1.obs;
+
+  Map<String, dynamic> prodToMap = <String, dynamic>{};
+
+  void addCartToMap({
+    required String key,
+    required dynamic products,
+  }) {
+    AppConst.updateMapValues(map: prodToMap, key: key, value: products);
+  }
+
   void getAllProducts() async {
     isLoaded = false.obs;
 

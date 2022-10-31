@@ -1,44 +1,27 @@
+import 'dart:convert';
+
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hungerz_ordering/Components/custom_circular_button.dart';
 import 'package:hungerz_ordering/Controllers/ProductController/all_products_controller.dart';
+import 'package:hungerz_ordering/Controllers/TableSelectionController/table_management_controller.dart';
 import 'package:hungerz_ordering/Locale/locales.dart';
+import 'package:hungerz_ordering/Models/TableManagemenModel/table_management_model.dart';
 import 'package:hungerz_ordering/Pages/item_info.dart';
 import 'package:hungerz_ordering/Pages/orderPlaced.dart';
+import 'package:hungerz_ordering/Services/storage_sevices.dart';
 import 'package:hungerz_ordering/Theme/colors.dart';
-import 'package:hungerz_ordering/utils.dart';
+
+import '../utils.dart';
 
 class HomePage extends StatefulWidget {
+  final int? index;
+
+  HomePage(this.index);
+
   @override
   _HomePageState createState() => _HomePageState();
-}
-
-class ItemCategory {
-  String image;
-  String? name;
-
-  ItemCategory(this.image, this.name);
-}
-
-class FoodItem {
-  String image;
-  String name;
-  bool isVeg;
-  String price;
-  bool isSelected;
-  int count = 0;
-  FoodItem(this.image, this.name, this.isVeg, this.price, this.isSelected, this.count);
-}
-
-class CartItem {
-  String name;
-  String image;
-  String price;
-  int count;
-  List<String> extras;
-  bool isVeg;
-  CartItem(this.name, this.image, this.price, this.count, this.extras, this.isVeg);
 }
 
 class _HomePageState extends State<HomePage> {
@@ -46,6 +29,7 @@ class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   AllProductsController allProductsCtrl = Get.find<AllProductsController>();
+  TableSelectionController tableCtrl = Get.find<TableSelectionController>();
 
   @override
   void initState() {
@@ -74,7 +58,7 @@ class _HomePageState extends State<HomePage> {
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
                                 child: Text(
-                                  locale.tableNo! + ' 6',
+                                  locale.tableNo! + ' ${(widget.index! + 1)}',
                                   style: Theme.of(context)
                                       .textTheme
                                       .subtitle1!
@@ -239,9 +223,35 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               CustomButton(
-                                onTap: () {
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) => OrderPlaced()));
+                                onTap: () async {
+                                  if (allProductsCtrl.itemsInCartList.isEmpty) {
+                                    showToast("Please choose an item");
+                                    return;
+                                  }
+                                  Tables data = tableCtrl.tableDetailModel[widget.index!].tables;
+
+                                  data.color = 0xFFFFFF00;
+                                  setState(() {});
+                                  TableDetail tables = TableDetail(
+                                    tables: Tables(
+                                      tableId: data.tableId,
+                                      color: data.color,
+                                      time: null,
+                                      available: 'Busy',
+                                    ),
+                                  );
+                                  tableCtrl.tableDetailModel[widget.index!] = tables;
+                                  final je = jsonEncode(tableCtrl.tableDetailModel);
+
+                                  await AppStorage.write(AppStorage.tableData, je);
+                                  setState(() {});
+
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => OrderPlaced(),
+                                    ),
+                                  );
                                 },
                                 padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
                                 bgColor: Theme.of(context).primaryColor,
@@ -469,11 +479,17 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                         SizedBox(width: 8),
                                         GestureDetector(
-                                            onTap: () {
-                                              allProductsCtrl.itemsInCartList
-                                                  .add(allProductsCtrl.allProducts!.data[index]);
-                                            },
-                                            child: Icon(Icons.add, color: Colors.white, size: 20)),
+                                          onTap: () {
+                                            allProductsCtrl.itemsInCartList
+                                                .add(allProductsCtrl.allProducts!.data[index]);
+
+                                            allProductsCtrl.addCartToMap(
+                                              key: (data.id++).toString(),
+                                              products: data,
+                                            );
+                                          },
+                                          child: Icon(Icons.add, color: Colors.white, size: 20),
+                                        ),
                                       ],
                                     )),
                               ),

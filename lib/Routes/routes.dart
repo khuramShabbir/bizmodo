@@ -10,7 +10,7 @@ class PageRoutes {
 
   Map<String, WidgetBuilder> routes() {
     return {
-      homePage: (context) => HomePage(),
+      homePage: (context) => HomePage(null),
       tableSelectionPage: (context) => TableSelectionPage(),
       loginPage: (context) => LoginPage(),
     };

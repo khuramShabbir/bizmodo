@@ -1,6 +1,11 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:hungerz_ordering/Components/custom_circular_button.dart';
 import 'package:hungerz_ordering/Locale/locales.dart';
+import 'package:hungerz_ordering/Theme/colors.dart';
+
+import 'table_selection.dart';
 
 class OrderPlaced extends StatefulWidget {
   @override
@@ -9,17 +14,6 @@ class OrderPlaced extends StatefulWidget {
 
 class _OrderPlacedState extends State<OrderPlaced> {
   @override
-  // void initState() {
-  //   super.initState();
-  //   Future.delayed(Duration(seconds: 5), () {
-  //     Navigator.pushReplacement(
-  //         context,
-  //         MaterialPageRoute(
-  //           builder: (context) => LandingPage(),
-  //         ));
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
@@ -50,18 +44,11 @@ class _OrderPlacedState extends State<OrderPlaced> {
                     ),
                     Text(
                       locale.youveGreatChoiceOfTaste!.toUpperCase(),
-                      style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                          fontSize: 20,
-                          letterSpacing: 1,
-                          fontWeight: FontWeight.bold),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText2!
+                          .copyWith(fontSize: 20, letterSpacing: 1, fontWeight: FontWeight.bold),
                     ),
-                    // Text(
-                    //   locale.choiceoOfTaste,
-                    //   style: Theme.of(context)
-                    //       .textTheme
-                    //       .bodyText2
-                    //       .copyWith(fontSize: 20),
-                    // ),
                   ],
                 ),
                 Spacer(
@@ -92,19 +79,17 @@ class _OrderPlacedState extends State<OrderPlaced> {
                     ),
                     RichText(
                         text: TextSpan(
-                            style:
-                                Theme.of(context).textTheme.subtitle1!.copyWith(
-                                      letterSpacing: 1,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                            style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                                  letterSpacing: 1,
+                                  fontWeight: FontWeight.bold,
+                                ),
                             children: <TextSpan>[
                           TextSpan(
-                            text: 'HUNGERZ',
+                            text: 'BIZMODO',
                           ),
                           TextSpan(
-                              text: 'RESTRO',
-                              style: TextStyle(
-                                  color: Theme.of(context).primaryColor)),
+                              text: 'Restro',
+                              style: TextStyle(color: Theme.of(context).primaryColor)),
                         ])),
                   ],
                 ),
@@ -130,21 +115,23 @@ class _OrderPlacedState extends State<OrderPlaced> {
                   ],
                 ),
                 Spacer(),
-                // GestureDetector(
-                //   onTap: () {
-                //     Navigator.pushReplacement(
-                //         context,
-                //         MaterialPageRoute(
-                //           builder: (context) => LandingPage(),
-                //         ));
-                //   },
-                //   child: Text("Home",
-                //       style: Theme.of(context).textTheme.bodyText2.copyWith(
-                //           fontSize: 20,
-                //           letterSpacing: 2,
-                //           color: Theme.of(context).primaryColor)),
-                // ),
-                // Spacer(),
+                SizedBox(
+                  width: Get.width * .2,
+                  child: CustomButton(
+                    onTap: () {
+                      setState(() {});
+
+                      Get.offAll(TableSelectionPage());
+                    },
+                    title: Text(
+                      "Finish",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    bgColor: primaryColor,
+                  ),
+                ),
+                Spacer(),
               ],
             ),
           ),

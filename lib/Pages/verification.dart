@@ -72,7 +72,8 @@ class Verification extends StatelessWidget {
                 Spacer(),
                 GestureDetector(
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+                      Navigator.push(
+                          context, MaterialPageRoute(builder: (context) => HomePage(null)));
                     },
                     child: Row(
                       children: [

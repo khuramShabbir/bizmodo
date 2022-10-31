@@ -7,6 +7,7 @@ import 'package:hungerz_ordering/Controllers/ProductController/all_products_cont
 import 'package:hungerz_ordering/Controllers/TableSelectionController/table_management_controller.dart';
 import 'package:hungerz_ordering/Locale/locales.dart';
 import 'package:hungerz_ordering/Models/TableManagemenModel/table_management_model.dart';
+import 'package:hungerz_ordering/Pages/home_page.dart';
 import 'package:hungerz_ordering/Pages/login.dart';
 import 'package:hungerz_ordering/Routes/routes.dart';
 import 'package:hungerz_ordering/Services/storage_sevices.dart';
@@ -77,50 +78,78 @@ class _TableSelectionPageState extends State<TableSelectionPage> {
               Tables data = tableCtrl.tableDetailModel[index].tables;
               return Obx(() => GestureDetector(
                     onTap: () async {
-                      // if (data.available == "Busy") {
-                      //   showToast("Please choose Free table");
-                      //   return;
-                      // }
-                      data.color = 0xFFFFFF00;
-                      setState(() {});
-                      TableDetail tables = TableDetail(
-                          tables: Tables(
-                              tableId: data.tableId,
-                              color: data.color,
-                              time: null,
-                              available: 'Busy'));
-                      tableCtrl.tableDetailModel[index] = tables;
-                      setState(() {});
-                      final je = jsonEncode(tableCtrl.tableDetailModel);
-
-                      await AppStorage.write(AppStorage.tableData, je);
+                      if (data.available == "Busy") {
+                        showToast("Please choose Free table");
+                        return;
+                      }
 
                       Get.put(AllProductsController());
 
-                      Navigator.pushNamed(context, PageRoutes.homePage);
+                      Get.to(() => HomePage(index));
                     },
                     child: FadedScaleAnimation(
-                      Container(
-                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 14),
-                        decoration: BoxDecoration(boxShadow: <BoxShadow>[
-                          BoxShadow(
-                              color: Colors.grey.withOpacity(.5), blurRadius: 10, spreadRadius: 1)
-                        ], color: Color(data.color), borderRadius: BorderRadius.circular(8)),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
+                      Stack(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 14),
+                            decoration: BoxDecoration(boxShadow: <BoxShadow>[
+                              BoxShadow(
+                                  color: Colors.grey.withOpacity(.5),
+                                  blurRadius: 10,
+                                  spreadRadius: 1)
+                            ], color: Color(data.color), borderRadius: BorderRadius.circular(8)),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("Table No ${data.tableId}",
-                                    style: TextStyle(fontWeight: FontWeight.bold)),
-                                Expanded(
-                                    child: Text(data.time?.toString() ?? "", style: TextStyle()))
+                                Row(
+                                  children: [
+                                    Text("Table No ${data.tableId}",
+                                        style: TextStyle(fontWeight: FontWeight.bold)),
+                                    Expanded(
+                                        child:
+                                            Text(data.time?.toString() ?? "", style: TextStyle()))
+                                  ],
+                                ),
+                                Spacer(),
+                                Text(data.available, style: TextStyle())
                               ],
                             ),
-                            Spacer(),
-                            Text(data.available, style: TextStyle())
-                          ],
-                        ),
+                          ),
+                          if (data.available == "Busy")
+                            Positioned(
+                              top: 1,
+                              right: 2,
+                              child: DropdownButton<String>(
+                                underline: SizedBox(),
+                                items: <String>['Free'].map((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                                onChanged: (_) async {
+                                  Tables data = tableCtrl.tableDetailModel[index].tables;
+
+                                  data.color = 0xFFFFFFFF;
+
+                                  setState(() {});
+                                  TableDetail tables = TableDetail(
+                                    tables: Tables(
+                                      tableId: data.tableId,
+                                      color: data.color,
+                                      time: null,
+                                      available: 'Free',
+                                    ),
+                                  );
+                                  tableCtrl.tableDetailModel[index] = tables;
+                                  final je = jsonEncode(tableCtrl.tableDetailModel);
+
+                                  await AppStorage.write(AppStorage.tableData, je);
+                                  setState(() {});
+                                },
+                              ),
+                            ),
+                        ],
                       ),
                       durationInMilliseconds: 200.obs.value,
                     ),
