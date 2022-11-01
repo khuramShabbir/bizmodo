@@ -381,12 +381,12 @@ class _HomePageState extends State<HomePage> {
     var locale = AppLocalizations.of(context);
     return Obx(() => CustomButton(
           onTap: () {
-            // setState(() {
-            //   allProductsCtrl.drawerCount.value = 0;
-            // });
-            if (getItemsCountInCart() != 0) {
+            allProductsCtrl.drawerCount.value = 0;
+
+            if (getItemsCountInCart() != 0.obs.value) {
               _scaffoldKey.currentState!.openEndDrawer();
             }
+            setState(() {});
           },
           padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
           margin: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
@@ -395,7 +395,7 @@ class _HomePageState extends State<HomePage> {
             style: Theme.of(context).textTheme.bodyText1,
           ),
           bgColor: getItemsCountInCart() != 0 ? buttonColor : Colors.grey[600],
-        ));
+        ).obs.value);
   }
 
   Widget itemsPage() {
@@ -421,12 +421,7 @@ class _HomePageState extends State<HomePage> {
                       setState(() {
                         if (allProductsCtrl.selectedItem != index) {
                           allProductsCtrl.selectedItem = index;
-                          // allProductsCtrl.itemSelected.value = true;
                         }
-                        // else {
-                        //   allProductsCtrl.selectedItem = -1;
-                        //   allProductsCtrl.itemSelected.value = false;
-                        // }
                       });
                     },
                     child: Stack(
@@ -440,28 +435,6 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           durationInMilliseconds: 400,
-                        ),
-                        Align(
-                          alignment: Alignment.topRight,
-                          child: FadedScaleAnimation(
-                            Container(
-                              height: 20,
-                              width: 30,
-                              child: IconButton(
-                                  icon: Icon(
-                                    Icons.info,
-                                    color: Colors.grey.shade400,
-                                    size: 15,
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      allProductsCtrl.drawerCount.value = 1;
-                                    });
-                                    _scaffoldKey.currentState!.openEndDrawer();
-                                  }),
-                            ),
-                            durationInMilliseconds: 400,
-                          ),
                         ),
                         if (allProductsCtrl.selectedItem == index)
                           Opacity(
@@ -538,7 +511,31 @@ class _HomePageState extends State<HomePage> {
                                     )),
                               ),
                             ),
-                          )
+                          ),
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: FadedScaleAnimation(
+                            Container(
+                              height: 20,
+                              width: 30,
+                              child: IconButton(
+                                  icon: Icon(
+                                    Icons.info,
+                                    color: Colors.yellow.shade400,
+                                    size: 18,
+                                  ),
+                                  onPressed: () {
+                                    logger.i(45);
+
+                                    setState(() {
+                                      allProductsCtrl.drawerCount.value = 1;
+                                    });
+                                    _scaffoldKey.currentState!.openEndDrawer();
+                                  }),
+                            ),
+                            durationInMilliseconds: 400,
+                          ),
+                        ),
                       ],
                     ),
                   ),

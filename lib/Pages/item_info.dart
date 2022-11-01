@@ -37,7 +37,6 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
   ];
   @override
   Widget build(BuildContext context) {
-    logger.i(widget.img);
     var locale = AppLocalizations.of(context)!;
     return SafeArea(
       child: Drawer(
