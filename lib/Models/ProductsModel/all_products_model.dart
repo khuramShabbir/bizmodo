@@ -180,6 +180,7 @@ class Category {
   Category({
     required this.id,
     required this.name,
+    this.image = 'assets/ItemCategory/cat_fastfood.png',
     required this.businessId,
     required this.shortCode,
     required this.parentId,
@@ -194,6 +195,7 @@ class Category {
 
   int id;
   String name;
+  String image;
   int businessId;
   dynamic shortCode;
   int parentId;
@@ -208,6 +210,7 @@ class Category {
   factory Category.fromJson(Map<String, dynamic> json) => Category(
         id: json["id"],
         name: json["name"],
+        image: 'assets/ItemCategory/cat_fastfood.png',
         businessId: json["business_id"],
         shortCode: json["short_code"],
         parentId: json["parent_id"],
@@ -223,6 +226,7 @@ class Category {
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
+        "image": image,
         "business_id": businessId,
         "short_code": shortCode,
         "parent_id": parentId,

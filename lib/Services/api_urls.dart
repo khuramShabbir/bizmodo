@@ -5,4 +5,7 @@ class ApiUrls {
 
   /// Products
   static String allProducts = "connector/api/product";
+
+  /// create order
+  static String createOrder = "connector/api/sell";
 }

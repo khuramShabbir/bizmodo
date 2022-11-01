@@ -7,6 +7,7 @@ import 'package:hungerz_ordering/Components/custom_circular_button.dart';
 import 'package:hungerz_ordering/Controllers/ProductController/all_products_controller.dart';
 import 'package:hungerz_ordering/Controllers/TableSelectionController/table_management_controller.dart';
 import 'package:hungerz_ordering/Locale/locales.dart';
+import 'package:hungerz_ordering/Models/ProductsModel/all_products_model.dart';
 import 'package:hungerz_ordering/Models/TableManagemenModel/table_management_model.dart';
 import 'package:hungerz_ordering/Pages/item_info.dart';
 import 'package:hungerz_ordering/Pages/orderPlaced.dart';
@@ -14,6 +15,13 @@ import 'package:hungerz_ordering/Services/storage_sevices.dart';
 import 'package:hungerz_ordering/Theme/colors.dart';
 
 import '../utils.dart';
+
+class ItemCategory {
+  String image;
+  String? name;
+
+  ItemCategory(this.image, this.name);
+}
 
 class HomePage extends StatefulWidget {
   final int? index;
@@ -30,6 +38,7 @@ class _HomePageState extends State<HomePage> {
 
   AllProductsController allProductsCtrl = Get.find<AllProductsController>();
   TableSelectionController tableCtrl = Get.find<TableSelectionController>();
+  int currentIndex = 0;
 
   @override
   void initState() {
@@ -40,12 +49,13 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
+
     return Scaffold(
       key: _scaffoldKey,
       endDrawer: Drawer(
         child: Drawer(
           child: allProductsCtrl.drawerCount.value == 1
-              ? ItemInfoPage(allProductsCtrl.img?.value, allProductsCtrl.name?.value)
+              ? ItemInfoPage(allProductsCtrl.products)
               : SafeArea(
                   child: Stack(
                     children: [
@@ -93,7 +103,7 @@ class _HomePageState extends State<HomePage> {
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    ItemInfoPage(data.imageUrl, data.name),
+                                                    ItemInfoPage(allProductsCtrl.products),
                                               ),
                                             );
                                           },
@@ -246,7 +256,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                               CustomButton(
                                 onTap: () async {
-                                  if (getItemsCountInCart() == 0) {
+                                  if (allProductsCtrl.getItemsCountInCart() == 0) {
                                     showToast("Please choose an item");
                                     return;
                                   }
@@ -267,13 +277,14 @@ class _HomePageState extends State<HomePage> {
 
                                   await AppStorage.write(AppStorage.tableData, je);
                                   setState(() {});
-
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => OrderPlaced(),
-                                    ),
-                                  );
+                                  bool result = await allProductsCtrl.createOrder();
+                                  if (result)
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => OrderPlaced(),
+                                      ),
+                                    );
                                 },
                                 padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
                                 bgColor: Theme.of(context).primaryColor,
@@ -335,6 +346,57 @@ class _HomePageState extends State<HomePage> {
           () => Row(
             children: [
               /// TODO:
+              if (allProductsCtrl.isLoaded.isTrue)
+                Container(
+                  width: 90,
+                  child: ListView.builder(
+                      physics: BouncingScrollPhysics(),
+                      itemCount: /*allProductsCtrl.allProducts!.data.length*/ 1,
+                      itemBuilder: (context, index) {
+                        final Category cat = allProductsCtrl.allProducts!.data[index].category;
+                        return InkWell(
+                          onTap: () {
+                            setState(() {
+                              currentIndex = index;
+                            });
+                            // _pageController.animateToPage(index,
+                            //     duration: Duration(milliseconds: 500),
+                            //     curve: Curves.linearToEaseOut);
+                            // _pageController.animateTo(index.toDouble(), duration: null, curve: null)
+                          },
+                          child: Container(
+                            height: 80,
+                            // width: 60,
+                            margin: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: currentIndex == index
+                                  ? Theme.of(context).primaryColor
+                                  : Theme.of(context).scaffoldBackgroundColor,
+                            ),
+                            child: Column(
+                              children: [
+                                Spacer(),
+                                FadedScaleAnimation(
+                                  Image.asset(
+                                    cat.image,
+                                    scale: 3.5,
+                                  ),
+                                  durationInMilliseconds: 400,
+                                ),
+                                Spacer(),
+                                Text(
+                                  cat.name.toUpperCase(),
+                                  style:
+                                      Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 10),
+                                ),
+                                Spacer(),
+                              ],
+                            ),
+                          ),
+                        );
+                      }),
+                ),
               Expanded(
                 child: PageView(
                   physics: BouncingScrollPhysics(),
@@ -363,27 +425,13 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  int getItemsCountInCart() {
-    int items = 0;
-    try {
-      for (var value in allProductsCtrl.allProducts!.data) {
-        if (value.selectQuantity.value != 0) {
-          items++;
-        }
-      }
-      return items;
-    } catch (e) {
-      return items;
-    }
-  }
-
   Widget buildItemsInCartButton(BuildContext context) {
     var locale = AppLocalizations.of(context);
     return Obx(() => CustomButton(
           onTap: () {
             allProductsCtrl.drawerCount.value = 0;
 
-            if (getItemsCountInCart() != 0.obs.value) {
+            if (allProductsCtrl.getItemsCountInCart() != 0.obs.value) {
               _scaffoldKey.currentState!.openEndDrawer();
             }
             setState(() {});
@@ -391,10 +439,10 @@ class _HomePageState extends State<HomePage> {
           padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
           margin: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
           title: Text(
-            locale!.itemsInCart! + ' (${getItemsCountInCart()})',
+            locale!.itemsInCart! + ' (${allProductsCtrl.getItemsCountInCart()})',
             style: Theme.of(context).textTheme.bodyText1,
           ),
-          bgColor: getItemsCountInCart() != 0 ? buttonColor : Colors.grey[600],
+          bgColor: allProductsCtrl.getItemsCountInCart() != 0 ? buttonColor : Colors.grey[600],
         ).obs.value);
   }
 
@@ -497,13 +545,6 @@ class _HomePageState extends State<HomePage> {
                                           onTap: () {
                                             ++allProductsCtrl
                                                 .allProducts?.data[index].selectQuantity.value;
-                                            // allProductsCtrl.itemsInCartList
-                                            //     .add(allProductsCtrl.allProducts!.data[index]);
-
-                                            // allProductsCtrl.addCartToMap(
-                                            //   key: (data.id++).toString(),
-                                            //   products: data,
-                                            // );
                                           },
                                           child: Icon(Icons.add, color: Colors.white, size: 20),
                                         ),
@@ -529,6 +570,7 @@ class _HomePageState extends State<HomePage> {
 
                                     setState(() {
                                       allProductsCtrl.drawerCount.value = 1;
+                                      allProductsCtrl.products = data;
                                     });
                                     _scaffoldKey.currentState!.openEndDrawer();
                                   }),
