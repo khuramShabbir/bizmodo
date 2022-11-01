@@ -5,6 +5,7 @@ import 'package:hungerz_ordering/Components/custom_circular_button.dart';
 
 import '../Locale/locales.dart';
 import '../Theme/colors.dart';
+import '../utils.dart';
 
 class ItemInfoPage extends StatefulWidget {
   final String? img;
@@ -36,6 +37,7 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
   ];
   @override
   Widget build(BuildContext context) {
+    logger.i(widget.img);
     var locale = AppLocalizations.of(context)!;
     return SafeArea(
       child: Drawer(
@@ -70,11 +72,11 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
                               width: MediaQuery.of(context).size.width,
                               height: MediaQuery.of(context).size.height * 0.5,
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(8)),
-                                  image: DecorationImage(
-                                      image: AssetImage(widget.img!),
-                                      fit: BoxFit.cover)),
+                                  borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
+                                  image: widget.img != null
+                                      ? DecorationImage(
+                                          image: AssetImage(widget.img!), fit: BoxFit.cover)
+                                      : null),
                             ),
                             durationInMilliseconds: 400,
                           ),
@@ -102,25 +104,22 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
                         width: MediaQuery.of(context).size.width,
                         padding: EdgeInsets.only(left: 15, right: 15, top: 8),
                         decoration: BoxDecoration(
-                          borderRadius:
-                              BorderRadius.vertical(bottom: Radius.circular(8)),
+                          borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)),
                           color: Theme.of(context).scaffoldBackgroundColor,
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              widget.name!,
-                              style: Theme.of(context).textTheme.subtitle1,
-                            ),
+                            if (widget.name != null)
+                              Text(
+                                widget.name!,
+                                style: Theme.of(context).textTheme.subtitle1,
+                              ),
                             Row(
                               children: [
                                 Text(
                                   locale.fastFood!,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .caption!
-                                      .copyWith(height: 1.8),
+                                  style: Theme.of(context).textTheme.caption!.copyWith(height: 1.8),
                                 ),
                                 Spacer(),
                                 Text(
@@ -136,13 +135,10 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
                                 style: Theme.of(context)
                                     .textTheme
                                     .caption!
-                                    .copyWith(
-                                        fontWeight: FontWeight.w500,
-                                        letterSpacing: 1.5)),
+                                    .copyWith(fontWeight: FontWeight.w500, letterSpacing: 1.5)),
                             buildAddOption(context, 'Extra Cheese', '\$5.00'),
                             buildAddOption(context, 'Extra Honey', '\$3.00'),
-                            buildAddOption(
-                                context, 'Extra Mayonnaise', '\$4.00'),
+                            buildAddOption(context, 'Extra Mayonnaise', '\$4.00'),
                             SizedBox(
                               height: 20,
                             ),
@@ -152,8 +148,7 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
                       Container(
                           height: 50,
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.vertical(
-                                  bottom: Radius.circular(8)),
+                              borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)),
                               color: Theme.of(context).primaryColor),
                           width: MediaQuery.of(context).size.width,
                           child: Center(
@@ -166,10 +161,8 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
                   Column(
                     children: [
                       Container(
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                        margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
                         width: MediaQuery.of(context).size.width,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
@@ -182,32 +175,27 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
                               style: Theme.of(context)
                                   .textTheme
                                   .caption!
-                                  .copyWith(
-                                      fontWeight: FontWeight.w500,
-                                      letterSpacing: 1.5)),
+                                  .copyWith(fontWeight: FontWeight.w500, letterSpacing: 1.5)),
                           TextSpan(
                               text:
                                   'Lorem ipsum dolor sit amet, consecutar adi piscing elit, sed do eiusmod incidudant ut djd labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText2!
-                                  .copyWith(height: 1.3)),
+                              style: Theme.of(context).textTheme.bodyText2!.copyWith(height: 1.3)),
                         ])),
                       ),
                       FadedScaleAnimation(
                         Container(
                           width: MediaQuery.of(context).size.width,
                           height: MediaQuery.of(context).size.height * 0.4,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 10),
+                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
-                              image: DecorationImage(
-                                  image: AssetImage(widget.img!),
-                                  fit: BoxFit.cover,
-                                  colorFilter: ColorFilter.mode(
-                                      Colors.black.withOpacity(0.4),
-                                      BlendMode.darken))),
+                              image: widget.img != null
+                                  ? DecorationImage(
+                                      image: AssetImage(widget.img!),
+                                      fit: BoxFit.cover,
+                                      colorFilter: ColorFilter.mode(
+                                          Colors.black.withOpacity(0.4), BlendMode.darken))
+                                  : null),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -223,8 +211,7 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
                                   text: TextSpan(children: <TextSpan>[
                                 TextSpan(
                                     text: locale.knowHowWeCookIt! + '\n',
-                                    style:
-                                        Theme.of(context).textTheme.bodyText1),
+                                    style: Theme.of(context).textTheme.bodyText1),
                                 TextSpan(
                                     text: '3 ' + locale.minVideo!,
                                     style: Theme.of(context)
@@ -239,37 +226,25 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
                       ),
                       Container(
                         width: MediaQuery.of(context).size.width,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 0, vertical: 5),
+                        padding: EdgeInsets.symmetric(horizontal: 0, vertical: 5),
                         child: Row(
                           // mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            buildCustomContainer(
-                                context,
-                                'assets/ItemCategory/cat_fastfood.png',
-                                locale.servings!,
-                                '2 ' + locale.people!),
+                            buildCustomContainer(context, 'assets/ItemCategory/cat_fastfood.png',
+                                locale.servings!, '2 ' + locale.people!),
                             Spacer(),
-                            buildCustomContainer(
-                                context,
-                                'assets/icon_cooktime.png',
-                                locale.cookTime!,
-                                '12 ' + locale.mins!),
+                            buildCustomContainer(context, 'assets/icon_cooktime.png',
+                                locale.cookTime!, '12 ' + locale.mins!),
                             Spacer(),
-                            buildCustomContainer(
-                                context,
-                                'assets/icon_orders.png',
-                                locale.energy!,
+                            buildCustomContainer(context, 'assets/icon_orders.png', locale.energy!,
                                 '227 ' + locale.cal!),
                           ],
                         ),
                       ),
                       Container(
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                        margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                         width: MediaQuery.of(context).size.width,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
@@ -282,38 +257,33 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
                               style: Theme.of(context)
                                   .textTheme
                                   .caption!
-                                  .copyWith(
-                                      fontWeight: FontWeight.w500,
-                                      letterSpacing: 1.5)),
+                                  .copyWith(fontWeight: FontWeight.w500, letterSpacing: 1.5)),
                           TextSpan(
                               text: locale.foodItems,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText2!
-                                  .copyWith(
-                                      letterSpacing: 0.4,
-                                      height: 1.6,
-                                      wordSpacing: 15,
-                                      fontWeight: FontWeight.w500)),
+                              style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                                  letterSpacing: 0.4,
+                                  height: 1.6,
+                                  wordSpacing: 15,
+                                  fontWeight: FontWeight.w500)),
                         ])),
                       ),
                       SizedBox(
                         height: 18,
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 18),
+                        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 18),
                         child: Text(
                           locale.relatedItemsYouMayLike!,
-                          style: Theme.of(context).textTheme.caption!.copyWith(
-                              fontWeight: FontWeight.w500, letterSpacing: 1.5),
+                          style: Theme.of(context)
+                              .textTheme
+                              .caption!
+                              .copyWith(fontWeight: FontWeight.w500, letterSpacing: 1.5),
                         ),
                       ),
                       SizedBox(
                         height: 230,
                         child: ListView.builder(
-                            padding: EdgeInsets.only(
-                                left: 10, right: 10, bottom: 20),
+                            padding: EdgeInsets.only(left: 10, right: 10, bottom: 20),
                             scrollDirection: Axis.horizontal,
                             shrinkWrap: true,
                             itemCount: 6,
@@ -323,8 +293,7 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
                                 width: 170,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
-                                    color: Theme.of(context)
-                                        .scaffoldBackgroundColor),
+                                    color: Theme.of(context).scaffoldBackgroundColor),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -336,18 +305,16 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
                                         height: 150,
                                         width: 170,
                                         decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.vertical(
-                                                top: Radius.circular(10)),
+                                            borderRadius:
+                                                BorderRadius.vertical(top: Radius.circular(10)),
                                             image: DecorationImage(
-                                                image: AssetImage(
-                                                    foodItems[index].image),
+                                                image: AssetImage(foodItems[index].image),
                                                 fit: BoxFit.fill)),
                                       ),
                                     ),
                                     Spacer(),
                                     Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0),
+                                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                       child: Text(
                                         foodItems[index].name,
                                         style: Theme.of(context)
@@ -360,8 +327,7 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
                                     ),
                                     Spacer(),
                                     Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0),
+                                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                       child: Row(
                                         children: [
                                           Image.asset(
@@ -430,8 +396,7 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
     );
   }
 
-  Widget buildCustomContainer(
-      BuildContext context, String icon, String title, String subtitle) {
+  Widget buildCustomContainer(BuildContext context, String icon, String title, String subtitle) {
     return Expanded(
       flex: 7,
       child: Container(
@@ -464,10 +429,7 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
             Spacer(),
             Text(
               subtitle,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyText2!
-                  .copyWith(fontWeight: FontWeight.w500),
+              style: Theme.of(context).textTheme.bodyText2!.copyWith(fontWeight: FontWeight.w500),
             ),
             Spacer(
               flex: 2,

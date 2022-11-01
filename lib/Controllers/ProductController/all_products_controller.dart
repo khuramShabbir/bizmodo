@@ -10,7 +10,6 @@ class AllProductsController extends GetxController {
   /// models
   AllProducts? allProducts;
 
-  RxList<Products> itemsInCartList = <Products>[].obs;
   RxBool isLoaded = false.obs;
   RxBool itemSelected = false.obs;
   RxString? img, name;

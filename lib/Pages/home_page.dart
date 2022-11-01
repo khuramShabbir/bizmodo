@@ -72,134 +72,156 @@ class _HomePageState extends State<HomePage> {
                           ListView.builder(
                               physics: NeverScrollableScrollPhysics(),
                               padding: EdgeInsets.only(bottom: 150),
-                              itemCount: allProductsCtrl.itemsInCartList.length,
+                              itemCount: allProductsCtrl.allProducts == null
+                                  ? 0
+                                  : allProductsCtrl.allProducts!.data.length,
                               shrinkWrap: true,
                               itemBuilder: (context, index) {
-                                final data = allProductsCtrl.itemsInCartList[index];
-                                return Column(
-                                  children: [
-                                    ListTile(
-                                      contentPadding:
-                                          EdgeInsets.symmetric(vertical: 2, horizontal: 10),
-                                      leading: GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ItemInfoPage(data.imageUrl, data.name),
-                                            ),
-                                          );
-                                        },
-                                        child: FadedScaleAnimation(
-                                          ClipRRect(
-                                            borderRadius: BorderRadius.circular(8),
-                                            child: FadedScaleAnimation(
-                                              Image.network(data.imageUrl),
-                                              durationInMilliseconds: 400,
-                                            ),
-                                          ),
-                                          durationInMilliseconds: 400,
-                                        ),
-                                      ),
-                                      title: Padding(
-                                        padding: const EdgeInsets.only(bottom: 10.0),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Text(
-                                              data.name,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .subtitle1!
-                                                  .copyWith(fontSize: 14),
-                                            ),
-                                            SizedBox(width: 8),
-                                            FadedScaleAnimation(
-                                              Image.asset(
-                                                'assets/ic_veg.png',
-                                                height: 12,
+                                final data = allProductsCtrl.allProducts!.data[index];
+                                if (data.selectQuantity.value == 0) {
+                                  return Container();
+                                }
+                                return Obx(() {
+                                  return Column(
+                                    children: [
+                                      ListTile(
+                                        contentPadding:
+                                            EdgeInsets.symmetric(vertical: 2, horizontal: 10),
+                                        leading: GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ItemInfoPage(data.imageUrl, data.name),
                                               ),
-                                              durationInMilliseconds: 400,
+                                            );
+                                          },
+                                          child: FadedScaleAnimation(
+                                            ClipRRect(
+                                              borderRadius: BorderRadius.circular(8),
+                                              child: FadedScaleAnimation(
+                                                Image.network(data.imageUrl),
+                                                durationInMilliseconds: 400,
+                                              ),
                                             ),
+                                            durationInMilliseconds: 400,
+                                          ),
+                                        ),
+                                        title: Padding(
+                                          padding: const EdgeInsets.only(bottom: 10.0),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Text(
+                                                data.name,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .subtitle1!
+                                                    .copyWith(fontSize: 14),
+                                              ),
+                                              SizedBox(width: 8),
+                                              FadedScaleAnimation(
+                                                Image.asset(
+                                                  'assets/ic_veg.png',
+                                                  height: 12,
+                                                ),
+                                                durationInMilliseconds: 400,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        subtitle: Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                      vertical: 6, horizontal: 6),
+                                                  decoration: BoxDecoration(
+                                                      borderRadius: BorderRadius.circular(20),
+                                                      border: Border.all(
+                                                          color: newOrderColor, width: 0.2)),
+                                                  child: Row(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    children: [
+                                                      GestureDetector(
+                                                          onTap: () {
+                                                            if (allProductsCtrl
+                                                                    .allProducts!
+                                                                    .data[index]
+                                                                    .selectQuantity
+                                                                    .value >
+                                                                0) {
+                                                              --allProductsCtrl.allProducts!
+                                                                  .data[index].selectQuantity.value;
+                                                            }
+                                                          },
+                                                          child: Icon(
+                                                            Icons.remove,
+                                                            color: newOrderColor,
+                                                            size: 16,
+                                                          )),
+                                                      SizedBox(
+                                                        width: 8,
+                                                      ),
+                                                      Text(allProductsCtrl.allProducts!.data[index]
+                                                          .selectQuantity.value
+                                                          .toString()),
+                                                      SizedBox(
+                                                        width: 8,
+                                                      ),
+                                                      GestureDetector(
+                                                          onTap: () {
+                                                            ++allProductsCtrl.allProducts!
+                                                                .data[index].selectQuantity.value;
+                                                          },
+                                                          child: Icon(
+                                                            Icons.add,
+                                                            color: newOrderColor,
+                                                            size: 16,
+                                                          )),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Spacer(),
+                                                Text(
+                                                  '\$' +
+                                                      data.productVariations.first.variations.first
+                                                          .sellPriceIncTax,
+                                                  style: TextStyle(color: Colors.black),
+                                                )
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              height: 5,
+                                            ),
+                                            index == 0
+                                                ? Row(
+                                                    children: [
+                                                      Text(
+                                                        "Extra Cheese",
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .subtitle1!
+                                                            .copyWith(fontSize: 14),
+                                                      ),
+                                                      Spacer(),
+                                                      Text(
+                                                          '\$' +
+                                                              data.productVariations.first
+                                                                  .variations.first.sellPriceIncTax,
+                                                          style: TextStyle(color: Colors.black))
+                                                    ],
+                                                  )
+                                                : SizedBox.shrink()
                                           ],
                                         ),
                                       ),
-                                      subtitle: Column(
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Container(
-                                                padding: EdgeInsets.symmetric(
-                                                    vertical: 6, horizontal: 6),
-                                                decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(20),
-                                                    border: Border.all(
-                                                        color: newOrderColor, width: 0.2)),
-                                                child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: [
-                                                    GestureDetector(
-                                                        onTap: () {},
-                                                        child: Icon(
-                                                          Icons.remove,
-                                                          color: newOrderColor,
-                                                          size: 16,
-                                                        )),
-                                                    SizedBox(
-                                                      width: 8,
-                                                    ),
-                                                    Text(""),
-                                                    SizedBox(
-                                                      width: 8,
-                                                    ),
-                                                    GestureDetector(
-                                                        onTap: () {},
-                                                        child: Icon(
-                                                          Icons.add,
-                                                          color: newOrderColor,
-                                                          size: 16,
-                                                        )),
-                                                  ],
-                                                ),
-                                              ),
-                                              Spacer(),
-                                              Text(
-                                                '\$' +
-                                                    data.productVariations.first.variations.first
-                                                        .sellPriceIncTax,
-                                                style: TextStyle(color: Colors.black),
-                                              )
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          index == 0
-                                              ? Row(
-                                                  children: [
-                                                    Text(
-                                                      "Extra Cheese",
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .subtitle1!
-                                                          .copyWith(fontSize: 14),
-                                                    ),
-                                                    Spacer(),
-                                                    Text(
-                                                        '\$' +
-                                                            data.productVariations.first.variations
-                                                                .first.sellPriceIncTax,
-                                                        style: TextStyle(color: Colors.black))
-                                                  ],
-                                                )
-                                              : SizedBox.shrink()
-                                        ],
-                                      ),
-                                    ),
-                                    // SizedBox(height: 200,),
-                                  ],
-                                );
+                                      // SizedBox(height: 200,),
+                                    ],
+                                  );
+                                });
                               })
                         ],
                       ),
@@ -224,7 +246,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                               CustomButton(
                                 onTap: () async {
-                                  if (allProductsCtrl.itemsInCartList.isEmpty) {
+                                  if (getItemsCountInCart() == 0) {
                                     showToast("Please choose an item");
                                     return;
                                   }
@@ -341,26 +363,38 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  int getItemsCountInCart() {
+    int items = 0;
+    try {
+      for (var value in allProductsCtrl.allProducts!.data) {
+        if (value.selectQuantity.value != 0) {
+          items++;
+        }
+      }
+      return items;
+    } catch (e) {
+      return items;
+    }
+  }
+
   Widget buildItemsInCartButton(BuildContext context) {
     var locale = AppLocalizations.of(context);
     return Obx(() => CustomButton(
           onTap: () {
-            setState(() {
-              allProductsCtrl.drawerCount.value = 0;
-            });
-            if (allProductsCtrl.itemSelected.value) {
+            // setState(() {
+            //   allProductsCtrl.drawerCount.value = 0;
+            // });
+            if (getItemsCountInCart() != 0) {
               _scaffoldKey.currentState!.openEndDrawer();
             }
           },
           padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
           margin: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
           title: Text(
-            allProductsCtrl.itemsInCartList.isNotEmpty
-                ? locale!.itemsInCart! + " ( ${allProductsCtrl.itemsInCartList.length.toString()} )"
-                : locale!.itemsInCart! + ' (0)',
+            locale!.itemsInCart! + ' (${getItemsCountInCart()})',
             style: Theme.of(context).textTheme.bodyText1,
           ),
-          bgColor: allProductsCtrl.itemSelected.value ? buttonColor : Colors.grey[600],
+          bgColor: getItemsCountInCart() != 0 ? buttonColor : Colors.grey[600],
         ));
   }
 
@@ -387,11 +421,12 @@ class _HomePageState extends State<HomePage> {
                       setState(() {
                         if (allProductsCtrl.selectedItem != index) {
                           allProductsCtrl.selectedItem = index;
-                          allProductsCtrl.itemSelected.value = true;
-                        } else {
-                          allProductsCtrl.selectedItem = -1;
-                          allProductsCtrl.itemSelected.value = false;
+                          // allProductsCtrl.itemSelected.value = true;
                         }
+                        // else {
+                        //   allProductsCtrl.selectedItem = -1;
+                        //   allProductsCtrl.itemSelected.value = false;
+                        // }
                       });
                     },
                     child: Stack(
@@ -460,8 +495,12 @@ class _HomePageState extends State<HomePage> {
                                       children: [
                                         GestureDetector(
                                             onTap: () {
-                                              if (allProductsCtrl.itemsInCartList.isNotEmpty)
-                                                allProductsCtrl.itemsInCartList.removeLast();
+                                              if (allProductsCtrl.allProducts!.data[index]
+                                                      .selectQuantity.value >
+                                                  0.obs.value) {
+                                                --allProductsCtrl
+                                                    .allProducts?.data[index].selectQuantity.value;
+                                              }
                                             },
                                             child:
                                                 Icon(Icons.remove, color: Colors.white, size: 20)),
@@ -470,7 +509,10 @@ class _HomePageState extends State<HomePage> {
                                           radius: 10,
                                           backgroundColor: buttonColor,
                                           child: Text(
-                                            allProductsCtrl.itemsInCartList.length.toString(),
+                                            allProductsCtrl
+                                                .allProducts!.data[index].selectQuantity.obs.value
+                                                .toString(),
+                                            // allProductsCtrl.itemsInCartList.length.toString(),
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .subtitle1!
@@ -480,13 +522,15 @@ class _HomePageState extends State<HomePage> {
                                         SizedBox(width: 8),
                                         GestureDetector(
                                           onTap: () {
-                                            allProductsCtrl.itemsInCartList
-                                                .add(allProductsCtrl.allProducts!.data[index]);
+                                            ++allProductsCtrl
+                                                .allProducts?.data[index].selectQuantity.value;
+                                            // allProductsCtrl.itemsInCartList
+                                            //     .add(allProductsCtrl.allProducts!.data[index]);
 
-                                            allProductsCtrl.addCartToMap(
-                                              key: (data.id++).toString(),
-                                              products: data,
-                                            );
+                                            // allProductsCtrl.addCartToMap(
+                                            //   key: (data.id++).toString(),
+                                            //   products: data,
+                                            // );
                                           },
                                           child: Icon(Icons.add, color: Colors.white, size: 20),
                                         ),

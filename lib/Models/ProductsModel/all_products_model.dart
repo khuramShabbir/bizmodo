@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:get/get.dart';
+
 AllProducts allProductsFromJson(String str) => AllProducts.fromJson(json.decode(str));
 
 String allProductsToJson(AllProducts data) => json.encode(data.toJson());
@@ -62,9 +64,11 @@ class Products {
     required this.subCategory,
     required this.productTax,
     required this.productLocations,
+    required this.selectQuantity,
   });
 
   int id;
+  RxInt selectQuantity;
   String name;
   int businessId;
   String type;
@@ -99,6 +103,7 @@ class Products {
 
   factory Products.fromJson(Map<String, dynamic> json) => Products(
         id: json["id"],
+        selectQuantity: 0.obs,
         name: json["name"],
         businessId: json["business_id"],
         type: json["type"],
@@ -136,6 +141,7 @@ class Products {
 
   Map<String, dynamic> toJson() => {
         "id": id,
+        "selectQuantity": selectQuantity,
         "name": name,
         "business_id": businessId,
         "type": type,
