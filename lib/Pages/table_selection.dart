@@ -35,6 +35,8 @@ class _TableSelectionPageState extends State<TableSelectionPage> {
   final TableSelectionController tableCtrl = Get.find<TableSelectionController>();
   @override
   Widget build(BuildContext context) {
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -47,7 +49,7 @@ class _TableSelectionPageState extends State<TableSelectionPage> {
             RichText(
                 text: TextSpan(children: <TextSpan>[
               TextSpan(
-                  text: 'HUNGERZ',
+                  text: 'BIZMODO',
                   style: Theme.of(context)
                       .textTheme
                       .subtitle1!
@@ -66,95 +68,104 @@ class _TableSelectionPageState extends State<TableSelectionPage> {
       ),
       body: Container(
         color: Theme.of(context).backgroundColor,
-        child: GridView.builder(
-            padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-            itemCount: tableCtrl.tableDetailModel.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                childAspectRatio: 1.5),
-            itemBuilder: (context, index) {
-              Tables data = tableCtrl.tableDetailModel[index].tables;
-              return Obx(() => GestureDetector(
-                    onTap: () async {
-                      if (data.available == "Busy") {
-                        showToast("Please choose Free table");
-                        return;
-                      }
+        child: OrientationBuilder(
+          builder: (BuildContext context, Orientation orientation) {
+            return GridView.builder(
+                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                itemCount: tableCtrl.tableDetailModel.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: isPortrait ? 2 : 4,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  childAspectRatio: 1.5,
+                ),
+                itemBuilder: (context, index) {
+                  Tables data = tableCtrl.tableDetailModel[index].tables;
+                  return Obx(() => GestureDetector(
+                        onTap: () async {
+                          if (data.available == "Busy") {
+                            showToast("Please choose Free table");
+                            return;
+                          }
 
-                      Get.put(AllProductsController());
+                          Get.put(AllProductsController());
 
-                      Get.to(() => HomePage(index));
-                    },
-                    child: FadedScaleAnimation(
-                      Stack(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 14),
-                            decoration: BoxDecoration(boxShadow: <BoxShadow>[
-                              BoxShadow(
-                                  color: Colors.grey.withOpacity(.5),
-                                  blurRadius: 10,
-                                  spreadRadius: 1)
-                            ], color: Color(data.color), borderRadius: BorderRadius.circular(8)),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
+                          Get.to(() => HomePage(index));
+                        },
+                        child: FadedScaleAnimation(
+                          Stack(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 14),
+                                decoration: BoxDecoration(
+                                    boxShadow: <BoxShadow>[
+                                      BoxShadow(
+                                          color: Colors.grey.withOpacity(.5),
+                                          blurRadius: 10,
+                                          spreadRadius: 1)
+                                    ],
+                                    color: Color(data.color),
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text("Table No ${data.tableId}",
-                                        style: TextStyle(fontWeight: FontWeight.bold)),
-                                    Expanded(
-                                        child:
-                                            Text(data.time?.toString() ?? "", style: TextStyle()))
+                                    Row(
+                                      children: [
+                                        Text("Table No ${data.tableId}",
+                                            style: TextStyle(fontWeight: FontWeight.bold)),
+                                        Expanded(
+                                            child: Text(data.time?.toString() ?? "",
+                                                style: TextStyle()))
+                                      ],
+                                    ),
+                                    Spacer(),
+                                    Text(data.available, style: TextStyle())
                                   ],
                                 ),
-                                Spacer(),
-                                Text(data.available, style: TextStyle())
-                              ],
-                            ),
-                          ),
-                          if (data.available == "Busy")
-                            Positioned(
-                              top: 1,
-                              right: 2,
-                              child: DropdownButton<String>(
-                                underline: SizedBox(),
-                                items: <String>['Free'].map((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList(),
-                                onChanged: (_) async {
-                                  Tables data = tableCtrl.tableDetailModel[index].tables;
-
-                                  data.color = 0xFFFFFFFF;
-
-                                  setState(() {});
-                                  TableDetail tables = TableDetail(
-                                    tables: Tables(
-                                      tableId: data.tableId,
-                                      color: data.color,
-                                      time: null,
-                                      available: 'Free',
-                                    ),
-                                  );
-                                  tableCtrl.tableDetailModel[index] = tables;
-                                  final je = jsonEncode(tableCtrl.tableDetailModel);
-
-                                  await AppStorage.write(AppStorage.tableData, je);
-                                  setState(() {});
-                                },
                               ),
-                            ),
-                        ],
-                      ),
-                      durationInMilliseconds: 200.obs.value,
-                    ),
-                  ));
-            }),
+                              // if (data.available == "Busy")
+                              Positioned(
+                                top: 1,
+                                right: 2,
+                                child: DropdownButton<String>(
+                                  underline: SizedBox(),
+                                  items: <String>[data.available == "Busy" ? 'Served' : "Free"]
+                                      .map((String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                  onChanged: (String? value) async {
+                                    Tables data = tableCtrl.tableDetailModel[index].tables;
+
+                                    data.color = 0xFFFFFFFF;
+
+                                    setState(() {});
+                                    TableDetail tables = TableDetail(
+                                      tables: Tables(
+                                        tableId: data.tableId,
+                                        color: data.color,
+                                        time: null,
+                                        available: value!,
+                                      ),
+                                    );
+                                    tableCtrl.tableDetailModel[index] = tables;
+                                    final je = jsonEncode(tableCtrl.tableDetailModel);
+
+                                    await AppStorage.write(AppStorage.tableData, je);
+                                    setState(() {});
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                          durationInMilliseconds: 200.obs.value,
+                        ),
+                      ));
+                });
+          },
+        ),
       ),
     );
   }

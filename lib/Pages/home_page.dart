@@ -49,6 +49,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
 
     return Scaffold(
       key: _scaffoldKey,
@@ -316,14 +317,19 @@ class _HomePageState extends State<HomePage> {
                   children: <TextSpan>[
                 TextSpan(
                   text: 'BIZMODO',
+                  style: TextStyle(fontSize: isPortrait ? 12 : 16),
                 ),
-                TextSpan(text: ' eMENU', style: TextStyle(color: Theme.of(context).primaryColor)),
+                TextSpan(
+                  text: ' eMENU',
+                  style: TextStyle(
+                      color: Theme.of(context).primaryColor, fontSize: isPortrait ? 12 : 16),
+                ),
               ])),
           durationInMilliseconds: 400,
         ),
         actions: [
           Container(
-              width: 300,
+              width: !isPortrait ? 300 : 150,
               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 4),
               child: TextFormField(
                 textAlignVertical: TextAlignVertical.center,
@@ -409,7 +415,7 @@ class _HomePageState extends State<HomePage> {
                   },
                   children: [
                     Obx(() => allProductsCtrl.isLoaded.isTrue
-                        ? itemsPage().obs.value
+                        ? itemsPage(isPortrait).obs.value
                         : Center(
                             child: CircularProgressIndicator(
                               color: primaryColor,
@@ -446,13 +452,16 @@ class _HomePageState extends State<HomePage> {
         ).obs.value);
   }
 
-  Widget itemsPage() {
+  Widget itemsPage(bool isPortrait) {
     return GridView.builder(
         physics: BouncingScrollPhysics(),
         padding: EdgeInsetsDirectional.only(top: 16, bottom: 16, start: 16, end: 32),
         itemCount: allProductsCtrl.allProducts?.data.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 4, crossAxisSpacing: 16, mainAxisSpacing: 16, childAspectRatio: 0.75),
+            crossAxisCount: isPortrait ? 2 : 4,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+            childAspectRatio: 0.75),
         itemBuilder: (context, index) {
           final data = allProductsCtrl.allProducts?.data[index];
           return Container(
