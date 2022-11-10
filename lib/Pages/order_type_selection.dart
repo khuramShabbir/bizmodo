@@ -1,7 +1,6 @@
 import 'package:animation_wrappers/Animations/faded_scale_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:hungerz_ordering/Components/custom_circular_button.dart';
 import 'package:hungerz_ordering/Components/single_selection_chip.dart';
 import 'package:hungerz_ordering/Components/textfield.dart';
@@ -70,6 +69,8 @@ class OrderTypeSelection extends StatelessWidget {
                         chipsDataList: orderCtrl.chipData,
                         valueChanged: (String? v) {
                           orderCtrl.orderValue.value = v!;
+                          if (orderCtrl.orderValue.value == orderCtrl.chipData[0])
+                            Get.to(() => TableSelectionPage());
                         }),
                     SizedBox(height: 20),
                     if (orderCtrl.orderValue.value == orderCtrl.chipData[1])
@@ -163,24 +164,51 @@ class OrderTypeSelection extends StatelessWidget {
                         ],
                       ),
                     SizedBox(height: 20),
-                    CustomButton(
-                      borderRadius: 10,
-                      onTap: () {
-                        if (formKey.currentState!.validate()) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext context) {
-                                return TableSelectionPage();
+                    Row(
+                      children: [
+                        if (orderCtrl.orderValue.value == orderCtrl.chipData[1] ||
+                            orderCtrl.orderValue.value == orderCtrl.chipData[2])
+                          Expanded(
+                            child: CustomButton(
+                              borderRadius: 10,
+                              onTap: () {
+                                if (formKey.currentState!.validate()) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (BuildContext context) {
+                                        return TableSelectionPage();
+                                      },
+                                    ),
+                                  );
+                                }
                               },
+                              title: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 10),
+                                child: Text(
+                                  "Submit",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
                             ),
-                          );
-                        }
-                      },
-                      title: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: Text("Submit"),
-                      ),
+                          ),
+                        if (orderCtrl.orderValue.value == orderCtrl.chipData[1] ||
+                            orderCtrl.orderValue.value == orderCtrl.chipData[2])
+                          SizedBox(width: 30),
+                        Expanded(
+                          child: CustomButton(
+                            borderRadius: 10,
+                            onTap: () {},
+                            title: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              child: Text(
+                                "Orders",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

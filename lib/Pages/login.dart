@@ -5,6 +5,9 @@ import 'package:hungerz_ordering/Components/colorButton.dart';
 import 'package:hungerz_ordering/Components/textfield.dart';
 import 'package:hungerz_ordering/Controllers/Auth%20Controller/auth_controller.dart';
 import 'package:hungerz_ordering/Controllers/TableSelectionController/table_management_controller.dart';
+import 'package:hungerz_ordering/Pages/forget_screen.dart';
+import 'package:hungerz_ordering/Pages/order_type_selection.dart';
+import 'package:hungerz_ordering/Theme/colors.dart';
 import 'table_selection.dart';
 
 class LoginPage extends StatefulWidget {
@@ -99,6 +102,15 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         SizedBox(height: 10),
+                        TextButton(
+                            onPressed: () {
+                              Get.to(() => ForgetPasswordScreen());
+                            },
+                            child: Text(
+                              "Forget Password ?",
+                              style: TextStyle(color: primaryColor),
+                            )),
+                        SizedBox(height: 10),
                         GestureDetector(
                           onTap: () async {
                             if (formKey.currentState!.validate()) {
@@ -106,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                               if (!token) return;
                               bool login = await authCtrl.getLoginUserDetail();
                               if (!login) return;
-                              Get.offAll(TableSelectionPage());
+                              Get.offAll(OrderTypeSelection());
                             }
                           },
                           child: ColorButton("Continue"),

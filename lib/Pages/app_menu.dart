@@ -8,6 +8,9 @@ import 'package:hungerz_ordering/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:whatsapp/whatsapp.dart';
 
+import 'profile_view.dart';
+import 'terms_and_condations.dart';
+
 class AppMenuSettings extends StatelessWidget {
   AppMenuSettings({Key? key}) : super(key: key);
 
@@ -79,12 +82,16 @@ class AppMenuSettings extends StatelessWidget {
                 child: Column(
                   children: [
                     listTile(
-                      onTap: () {},
-                      title: "Wallet",
+                      onTap: () {
+                        Get.to(() => ProfileView());
+                      },
+                      title: "Profile",
                       iconData: Icons.wallet,
                     ),
                     listTile(
-                        onTap: () {},
+                        onTap: () {
+                          Get.to(TermsAndConditions());
+                        },
                         title: "Terms & Condition",
                         iconData: Icons.library_add_check),
                     listTile(

@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
 
   AllProductsController allProductsCtrl = Get.find<AllProductsController>();
   TableSelectionController tableCtrl = Get.find<TableSelectionController>();
-  int currentIndex = -1;
+  int currentIndex = 0;
   List<Product>? product;
 
   @override
@@ -113,7 +113,7 @@ class _HomePageState extends State<HomePage> {
                                             ClipRRect(
                                               borderRadius: BorderRadius.circular(8),
                                               child: FadedScaleAnimation(
-                                                Image.network(data.name ?? ""),
+                                                Image.network(data.products?.first.imageUrl ?? ""),
                                                 durationInMilliseconds: 400,
                                               ),
                                             ),
@@ -201,8 +201,7 @@ class _HomePageState extends State<HomePage> {
                                                 ),
                                                 Spacer(),
                                                 Text(
-                                                  '\$' +
-                                                      "data.productVariations.first.variations.first.sellPriceIncTax",
+                                                  '\$' + "5",
                                                   style: TextStyle(color: Colors.black),
                                                 )
                                               ],
@@ -221,9 +220,7 @@ class _HomePageState extends State<HomePage> {
                                                             .copyWith(fontSize: 14),
                                                       ),
                                                       Spacer(),
-                                                      Text(
-                                                          '\$' +
-                                                              " data.productVariations.first.variations.first.sellPriceIncTax",
+                                                      Text('\$' + "1",
                                                           style: TextStyle(color: Colors.black))
                                                     ],
                                                   )
@@ -324,7 +321,7 @@ class _HomePageState extends State<HomePage> {
                 TextSpan(
                   text: ' eMENU',
                   style: TextStyle(
-                      color: Theme.of(context).primaryColor, fontSize: isPortrait ? 12 : 16),
+                      color: Theme.of(context).primaryColor, fontSize: isPortrait ? 10 : 16),
                 ),
               ])),
           durationInMilliseconds: 400,
@@ -364,7 +361,12 @@ class _HomePageState extends State<HomePage> {
                     itemCount: allProductsCtrl.allProducts?.data.length,
                     itemBuilder: (context, index) {
                       final Datum cat = allProductsCtrl.allProducts!.data[index];
-                      if (product == null) {}
+                      if (product == null) {
+                        product = cat.products;
+                        Future.delayed(Duration.zero, () {
+                          setState(() {});
+                        });
+                      }
                       return InkWell(
                         onTap: () {
                           setState(() {

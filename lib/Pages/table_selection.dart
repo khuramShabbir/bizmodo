@@ -39,25 +39,34 @@ class _TableSelectionPageState extends State<TableSelectionPage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         centerTitle: true,
-        leading: Image(
-          image: AssetImage("assets/appIcon.png"),
+        leading: IconButton(
+          onPressed: () {
+            Get.back();
+          },
+          icon: Icon(Icons.arrow_back, color: Colors.black),
         ),
         title: FadedScaleAnimation(
-          RichText(
-              text: TextSpan(children: <TextSpan>[
-            TextSpan(
-                text: 'BIZMODO',
-                style: Theme.of(context)
-                    .textTheme
-                    .subtitle1!
-                    .copyWith(letterSpacing: 1, fontWeight: FontWeight.bold)),
-            TextSpan(
-                text: 'eMENU',
-                style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                    color: Theme.of(context).primaryColor,
-                    letterSpacing: 1,
-                    fontWeight: FontWeight.bold)),
-          ])),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: 50,
+                width: 50,
+                child: Image(
+                  image: AssetImage("assets/appIcon.png"),
+                ),
+              ),
+              RichText(
+                  text: TextSpan(children: <TextSpan>[
+                TextSpan(
+                    text: 'eMENU',
+                    style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                        color: Theme.of(context).primaryColor,
+                        letterSpacing: 1,
+                        fontWeight: FontWeight.bold)),
+              ])),
+            ],
+          ),
           durationInMilliseconds: 400,
         ),
         actions: [
