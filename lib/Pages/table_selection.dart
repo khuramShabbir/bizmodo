@@ -5,11 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hungerz_ordering/Controllers/ProductController/all_products_controller.dart';
 import 'package:hungerz_ordering/Controllers/TableSelectionController/table_management_controller.dart';
-import 'package:hungerz_ordering/Locale/locales.dart';
 import 'package:hungerz_ordering/Models/TableManagemenModel/table_management_model.dart';
+import 'package:hungerz_ordering/Pages/app_menu.dart';
 import 'package:hungerz_ordering/Pages/home_page.dart';
-import 'package:hungerz_ordering/Pages/login.dart';
-import 'package:hungerz_ordering/Routes/routes.dart';
 import 'package:hungerz_ordering/Services/storage_sevices.dart';
 import 'package:hungerz_ordering/utils.dart';
 
@@ -40,31 +38,46 @@ class _TableSelectionPageState extends State<TableSelectionPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: GestureDetector(
-          onDoubleTap: () {
-            Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) => LoginPage()));
-          },
-          child: FadedScaleAnimation(
-            RichText(
-                text: TextSpan(children: <TextSpan>[
-              TextSpan(
-                  text: 'BIZMODO',
-                  style: Theme.of(context)
-                      .textTheme
-                      .subtitle1!
-                      .copyWith(letterSpacing: 1, fontWeight: FontWeight.bold)),
-              TextSpan(
-                  text: 'eMENU',
-                  style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                      color: Theme.of(context).primaryColor,
-                      letterSpacing: 1,
-                      fontWeight: FontWeight.bold)),
-            ])),
-            durationInMilliseconds: 400,
-          ),
+        centerTitle: true,
+        leading: Image(
+          image: AssetImage("assets/appIcon.png"),
         ),
-        actions: [],
+        title: FadedScaleAnimation(
+          RichText(
+              text: TextSpan(children: <TextSpan>[
+            TextSpan(
+                text: 'BIZMODO',
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle1!
+                    .copyWith(letterSpacing: 1, fontWeight: FontWeight.bold)),
+            TextSpan(
+                text: 'eMENU',
+                style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                    color: Theme.of(context).primaryColor,
+                    letterSpacing: 1,
+                    fontWeight: FontWeight.bold)),
+          ])),
+          durationInMilliseconds: 400,
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext ctx) {
+                    return AppMenuSettings();
+                  },
+                ),
+              );
+            },
+            icon: Icon(
+              Icons.menu,
+              color: Colors.black,
+            ),
+          )
+        ],
       ),
       body: Container(
         color: Theme.of(context).backgroundColor,
@@ -87,8 +100,6 @@ class _TableSelectionPageState extends State<TableSelectionPage> {
                             showToast("Please choose Free table");
                             return;
                           }
-
-                          Get.put(AllProductsController());
 
                           Get.to(() => HomePage(index));
                         },

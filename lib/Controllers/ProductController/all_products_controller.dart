@@ -8,7 +8,7 @@ import 'package:hungerz_ordering/utils.dart';
 class AllProductsController extends GetxController {
   /// models
   AllProducts? allProducts;
-  Products? products;
+  Product? products;
 
   RxBool isLoaded = false.obs;
   RxBool itemSelected = false.obs;
@@ -30,7 +30,7 @@ class AllProductsController extends GetxController {
     int items = 0;
     try {
       for (var value in allProducts!.data) {
-        if (value.selectQuantity.value != 0) {
+        if (value.selectQuantity!.value != 0) {
           items++;
         }
       }

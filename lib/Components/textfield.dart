@@ -5,8 +5,15 @@ class EntryField extends StatelessWidget {
   final TextEditingController? textCtrl;
   final bool obSecure;
   final FormFieldValidator<String>? validator;
+  final isOutLined;
 
-  EntryField({this.validator, this.obSecure = false, this.title = "", required this.textCtrl});
+  EntryField({
+    this.isOutLined = false,
+    this.validator,
+    this.obSecure = false,
+    this.title = "",
+    required this.textCtrl,
+  });
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -15,15 +22,27 @@ class EntryField extends StatelessWidget {
       obscureText: obSecure,
       decoration: InputDecoration(
           prefixStyle: Theme.of(context).textTheme.bodyText1!.copyWith(color: Colors.black),
-          border: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey[200]!),
-          ),
-          enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey[200]!),
-          ),
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey[200]!),
-          ),
+          border: isOutLined
+              ? OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(color: Colors.black, width: 1.5))
+              : UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey[200]!),
+                ),
+          enabledBorder: isOutLined
+              ? OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(color: Colors.black, width: 1.5))
+              : UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey[200]!),
+                ),
+          focusedBorder: isOutLined
+              ? OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(color: Colors.black, width: 1.5))
+              : UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey[200]!),
+                ),
           hintText: title,
           hintStyle:
               Theme.of(context).textTheme.bodyText1!.copyWith(color: Colors.black, fontSize: 17)),

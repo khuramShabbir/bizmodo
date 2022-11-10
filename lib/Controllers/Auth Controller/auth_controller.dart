@@ -37,7 +37,6 @@ class AuthController extends GetxController {
 
   Future<bool> getLoginUserDetail() async {
     showProgress();
-
     String response = await ApiServices.getMethod(feedUrl: ApiUrls.getLoggedInUserDetail);
     stopProgress();
 

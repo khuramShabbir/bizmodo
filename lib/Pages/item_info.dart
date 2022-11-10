@@ -9,7 +9,7 @@ import '../Locale/locales.dart';
 import '../Theme/colors.dart';
 
 class ItemInfoPage extends StatefulWidget {
-  final Products? product;
+  final Product? product;
 
   ItemInfoPage(this.product);
   @override
@@ -59,7 +59,7 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
                                         borderRadius:
                                             BorderRadius.vertical(top: Radius.circular(8)),
                                         image: DecorationImage(
-                                            image: NetworkImage(widget.product!.imageUrl),
+                                            image: NetworkImage(widget.product!.imageUrl ?? ""),
                                             fit: BoxFit.cover)),
                                   ),
                                   durationInMilliseconds: 400,
@@ -95,7 +95,7 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    widget.product!.name,
+                                    widget.product!.name!,
                                     style: Theme.of(context).textTheme.subtitle1,
                                   ),
                                   Row(
@@ -129,7 +129,7 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                ++widget.product!.selectQuantity.value;
+                                // ++widget.product!.selectQuantity.value;
                               },
                               child: Container(
                                 height: 50,

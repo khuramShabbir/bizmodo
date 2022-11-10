@@ -36,6 +36,8 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       FadedScaleAnimation(
                         Container(
+                          width: Get.width * .3,
+                          height: Get.width * .3,
                           child: Image(
                             image: AssetImage("assets/appIcon.png"),
                           ),
@@ -48,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
                           style: Theme.of(context)
                               .textTheme
                               .bodyText1!
-                              .copyWith(color: Colors.black, fontSize: 25),
+                              .copyWith(color: Colors.black, fontSize: 18),
                         ),
                         durationInMilliseconds: 200,
                       )
@@ -59,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          width: 250,
+                          width: Get.width * .5,
                           child: Container(
                             padding: EdgeInsets.symmetric(horizontal: 10),
                             decoration: BoxDecoration(
@@ -76,11 +78,9 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                         ),
-                        SizedBox(
-                          height: 10,
-                        ),
+                        SizedBox(height: 10),
                         Container(
-                          width: 250,
+                          width: Get.width * .5,
                           child: Container(
                             padding: EdgeInsets.symmetric(horizontal: 10),
                             decoration: BoxDecoration(
@@ -98,21 +98,15 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                         ),
-                        SizedBox(
-                          height: 10,
-                        ),
+                        SizedBox(height: 10),
                         GestureDetector(
                           onTap: () async {
                             if (formKey.currentState!.validate()) {
                               bool token = await authCtrl.getToken();
-
                               if (!token) return;
-
                               bool login = await authCtrl.getLoginUserDetail();
                               if (!login) return;
-                              Get.put(TableSelectionController());
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) => TableSelectionPage()));
+                              Get.offAll(TableSelectionPage());
                             }
                           },
                           child: ColorButton("Continue"),
@@ -132,108 +126,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-
-// import 'package:animation_wrappers/animation_wrappers.dart';
-// import 'package:flutter/material.dart';
-// import 'package:hungerz_ordering/Components/colorButton.dart';
-// import 'package:hungerz_ordering/Components/textfield.dart';
-// import 'package:hungerz_ordering/Pages/verification.dart';
-//
-// class LoginUi extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: FadedSlideAnimation(
-//         SingleChildScrollView(
-//           child: Container(
-//             height: MediaQuery.of(context).size.height,
-//             padding: EdgeInsets.symmetric(horizontal: 25),
-//             child: Column(
-//               children: [
-//                 SizedBox(
-//                   height: 70,
-//                 ),
-//                 Column(
-//                   crossAxisAlignment: CrossAxisAlignment.stretch,
-//                   children: [
-//                     Text(
-//                       "ENTERED REGISTERED",
-//                       style: Theme.of(context).textTheme.bodyText1!.copyWith(
-//                           fontSize: 16,
-//                           color: Colors.blueGrey.shade700,
-//                           fontWeight: FontWeight.bold),
-//                     ),
-//                     SizedBox(
-//                       height: 5,
-//                     ),
-//                     Text(
-//                       "PHONE NUMBER TO START",
-//                       style: Theme.of(context).textTheme.bodyText1!.copyWith(
-//                           fontSize: 16,
-//                           color: Colors.blueGrey.shade700,
-//                           fontWeight: FontWeight.bold),
-//                     ),
-//                   ],
-//                 ),
-//                 Spacer(),
-//                 Row(
-//                   children: [
-//                     Icon(
-//                       Icons.phone_android,
-//                       color: Theme.of(context).primaryColor,
-//                     ),
-//                     SizedBox(
-//                       width: 10,
-//                     ),
-//                     Text("PHONE NUMBER",
-//                         style: TextStyle(color: Colors.grey[600]))
-//                   ],
-//                 ),
-//                 Container(
-//                   padding: EdgeInsets.only(left: 35),
-//                   child: Column(
-//                     children: [
-//                       EntryField("+1 984 596 4521"),
-//                       SizedBox(
-//                         height: 10,
-//                       ),
-//                       Row(
-//                         children: [
-//                           Text(
-//                             "We'll send Verification code on given number",
-//                             style: TextStyle(color: Colors.grey),
-//                           ),
-//                         ],
-//                       )
-//                     ],
-//                   ),
-//                 ),
-//                 Spacer(),
-//                 GestureDetector(
-//                   onTap: () {
-//                     Navigator.push(
-//                         context,
-//                         MaterialPageRoute(
-//                             builder: (context) => Verification()));
-//                   },
-//                   child: Padding(
-//                     padding: EdgeInsets.only(left: 35),
-//                     child: Row(
-//                       children: [
-//                         ColorButton("CONTINUE"),
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-//                 Spacer()
-//               ],
-//             ),
-//           ),
-//         ),
-//         beginOffset: Offset(0, 0.3),
-//         endOffset: Offset(0, 0),
-//         curve: Curves.linearToEaseOut,
-//       ),
-//     );
-//   }
-// }

@@ -6,9 +6,14 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:hungerz_ordering/Controllers/Auth%20Controller/auth_controller.dart';
+import 'package:hungerz_ordering/Controllers/ProductController/all_products_controller.dart';
 import 'package:hungerz_ordering/Controllers/TableSelectionController/table_management_controller.dart';
+import 'package:hungerz_ordering/Controllers/order_type_controller.dart';
 import 'package:hungerz_ordering/Locale/settings_page.dart';
+import 'package:hungerz_ordering/Pages/order_type_selection.dart';
 import 'package:hungerz_ordering/Pages/table_selection.dart';
+import 'package:hungerz_ordering/Services/storage_sevices.dart';
 import 'Locale/language_cubit.dart';
 import 'Locale/locales.dart';
 import 'Routes/routes.dart';
@@ -18,20 +23,17 @@ void main() async {
   await GetStorage.init();
 
   WidgetsFlutterBinding.ensureInitialized();
-  // SystemChrome.setPreferredOrientations([
-  //   DeviceOrientation.landscapeRight,
-  //   DeviceOrientation.landscapeLeft,
-  // ]);
+  Get.put(AuthController());
+  Get.put(TableSelectionController());
+  Get.put(OrderTypeSelectionController());
+  Get.put(AllProductsController());
+
   runApp(Phoenix(child: HungerzOrdering()));
 }
 
 class HungerzOrdering extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // SystemChrome.setPreferredOrientations([
-    //   DeviceOrientation.landscapeRight,
-    //   DeviceOrientation.landscapeLeft,
-    // ]);
     return MultiBlocProvider(
       providers: [
         BlocProvider<LanguageCubit>(
@@ -51,11 +53,18 @@ class HungerzOrdering extends StatelessWidget {
             supportedLocales: AppLocalizations.getSupportedLocales(),
             locale: locale,
             theme: appTheme,
-            home: Settings(),
+            home: intiScreen(),
             routes: PageRoutes().routes(),
           );
         },
       ),
     );
+  }
+
+  Widget intiScreen() {
+    if (AppStorage.box.hasData(AppStorage.token) && AppStorage.box.hasData(AppStorage.lang))
+      return OrderTypeSelection();
+    else
+      return Settings();
   }
 }

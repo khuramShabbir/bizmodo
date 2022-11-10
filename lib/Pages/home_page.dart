@@ -38,7 +38,8 @@ class _HomePageState extends State<HomePage> {
 
   AllProductsController allProductsCtrl = Get.find<AllProductsController>();
   TableSelectionController tableCtrl = Get.find<TableSelectionController>();
-  int currentIndex = 0;
+  int currentIndex = -1;
+  List<Product>? product;
 
   @override
   void initState() {
@@ -77,7 +78,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               Spacer(),
-                              buildItemsInCartButton(context),
+                              // buildItemsInCartButton(context),
                             ],
                           ),
                           ListView.builder(
@@ -89,7 +90,7 @@ class _HomePageState extends State<HomePage> {
                               shrinkWrap: true,
                               itemBuilder: (context, index) {
                                 final data = allProductsCtrl.allProducts!.data[index];
-                                if (data.selectQuantity.value == 0) {
+                                if (data.selectQuantity!.value == 0) {
                                   return Container();
                                 }
                                 return Obx(() {
@@ -112,7 +113,7 @@ class _HomePageState extends State<HomePage> {
                                             ClipRRect(
                                               borderRadius: BorderRadius.circular(8),
                                               child: FadedScaleAnimation(
-                                                Image.network(data.imageUrl),
+                                                Image.network(data.name ?? ""),
                                                 durationInMilliseconds: 400,
                                               ),
                                             ),
@@ -125,7 +126,7 @@ class _HomePageState extends State<HomePage> {
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               Text(
-                                                data.name,
+                                                data.name ?? "",
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .subtitle1!
@@ -161,11 +162,14 @@ class _HomePageState extends State<HomePage> {
                                                             if (allProductsCtrl
                                                                     .allProducts!
                                                                     .data[index]
-                                                                    .selectQuantity
+                                                                    .selectQuantity!
                                                                     .value >
                                                                 0) {
-                                                              --allProductsCtrl.allProducts!
-                                                                  .data[index].selectQuantity.value;
+                                                              --allProductsCtrl
+                                                                  .allProducts!
+                                                                  .data[index]
+                                                                  .selectQuantity!
+                                                                  .value;
                                                             }
                                                           },
                                                           child: Icon(
@@ -177,7 +181,7 @@ class _HomePageState extends State<HomePage> {
                                                         width: 8,
                                                       ),
                                                       Text(allProductsCtrl.allProducts!.data[index]
-                                                          .selectQuantity.value
+                                                          .selectQuantity!.value
                                                           .toString()),
                                                       SizedBox(
                                                         width: 8,
@@ -185,7 +189,7 @@ class _HomePageState extends State<HomePage> {
                                                       GestureDetector(
                                                           onTap: () {
                                                             ++allProductsCtrl.allProducts!
-                                                                .data[index].selectQuantity.value;
+                                                                .data[index].selectQuantity!.value;
                                                           },
                                                           child: Icon(
                                                             Icons.add,
@@ -198,8 +202,7 @@ class _HomePageState extends State<HomePage> {
                                                 Spacer(),
                                                 Text(
                                                   '\$' +
-                                                      data.productVariations.first.variations.first
-                                                          .sellPriceIncTax,
+                                                      "data.productVariations.first.variations.first.sellPriceIncTax",
                                                   style: TextStyle(color: Colors.black),
                                                 )
                                               ],
@@ -220,8 +223,7 @@ class _HomePageState extends State<HomePage> {
                                                       Spacer(),
                                                       Text(
                                                           '\$' +
-                                                              data.productVariations.first
-                                                                  .variations.first.sellPriceIncTax,
+                                                              " data.productVariations.first.variations.first.sellPriceIncTax",
                                                           style: TextStyle(color: Colors.black))
                                                     ],
                                                   )
@@ -353,56 +355,64 @@ class _HomePageState extends State<HomePage> {
             children: [
               /// TODO:
               if (allProductsCtrl.isLoaded.isTrue)
+
+                /// Category Page
                 Container(
                   width: 90,
                   child: ListView.builder(
-                      physics: BouncingScrollPhysics(),
-                      itemCount: /*allProductsCtrl.allProducts!.data.length*/ 1,
-                      itemBuilder: (context, index) {
-                        final Category cat = allProductsCtrl.allProducts!.data[index].category;
-                        return InkWell(
-                          onTap: () {
-                            setState(() {
-                              currentIndex = index;
-                            });
-                            // _pageController.animateToPage(index,
-                            //     duration: Duration(milliseconds: 500),
-                            //     curve: Curves.linearToEaseOut);
-                            // _pageController.animateTo(index.toDouble(), duration: null, curve: null)
-                          },
-                          child: Container(
-                            height: 80,
-                            // width: 60,
-                            margin: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: currentIndex == index
-                                  ? Theme.of(context).primaryColor
-                                  : Theme.of(context).scaffoldBackgroundColor,
-                            ),
-                            child: Column(
-                              children: [
-                                Spacer(),
-                                FadedScaleAnimation(
-                                  Image.asset(
-                                    cat.image,
+                    physics: BouncingScrollPhysics(),
+                    itemCount: allProductsCtrl.allProducts?.data.length,
+                    itemBuilder: (context, index) {
+                      final Datum cat = allProductsCtrl.allProducts!.data[index];
+                      if (product == null) {}
+                      return InkWell(
+                        onTap: () {
+                          setState(() {
+                            currentIndex = index;
+                            product = cat.products;
+                          });
+                          _pageController.animateToPage(index,
+                              duration: Duration(milliseconds: 500), curve: Curves.linearToEaseOut);
+                          _pageController.animateTo(index.toDouble(),
+                              duration: Duration(milliseconds: 100), curve: Curves.easeInOut);
+                        },
+                        child: Container(
+                          height: 95,
+                          margin: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: currentIndex == index
+                                ? Theme.of(context).primaryColor.withOpacity(.3)
+                                : Theme.of(context).scaffoldBackgroundColor,
+                          ),
+                          child: Column(
+                            children: [
+                              Spacer(),
+                              FadedScaleAnimation(
+                                SizedBox(
+                                  child: Image.network(
+                                    cat.products?.first.imageUrl ?? "",
                                     scale: 3.5,
                                   ),
-                                  durationInMilliseconds: 400,
                                 ),
-                                Spacer(),
-                                Text(
-                                  cat.name.toUpperCase(),
-                                  style:
-                                      Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 10),
-                                ),
-                                Spacer(),
-                              ],
-                            ),
+                                durationInMilliseconds: 400,
+                              ),
+                              Spacer(),
+                              Text(
+                                cat.name != null ? cat.name!.toUpperCase() : "",
+                                style:
+                                    Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 10),
+                              ),
+                              Spacer(),
+                            ],
                           ),
-                        );
-                      }),
+                        ),
+                      );
+                    },
+                  ),
                 ),
+
+              /// Item Page
               Expanded(
                 child: PageView(
                   physics: BouncingScrollPhysics(),
@@ -414,13 +424,18 @@ class _HomePageState extends State<HomePage> {
                     });
                   },
                   children: [
-                    Obx(() => allProductsCtrl.isLoaded.isTrue
-                        ? itemsPage(isPortrait).obs.value
-                        : Center(
-                            child: CircularProgressIndicator(
-                              color: primaryColor,
-                            ),
-                          )),
+                    Obx(() {
+                      return allProductsCtrl.isLoaded.isTrue
+                          ? itemsPage(
+                              isPortrait: isPortrait,
+                              product: product,
+                            ).obs.value
+                          : Center(
+                              child: CircularProgressIndicator(
+                                color: primaryColor,
+                              ),
+                            );
+                    }),
                   ],
                 ),
               ),
@@ -452,178 +467,184 @@ class _HomePageState extends State<HomePage> {
         ).obs.value);
   }
 
-  Widget itemsPage(bool isPortrait) {
-    return GridView.builder(
-        physics: BouncingScrollPhysics(),
-        padding: EdgeInsetsDirectional.only(top: 16, bottom: 16, start: 16, end: 32),
-        itemCount: allProductsCtrl.allProducts?.data.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: isPortrait ? 2 : 4,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
-            childAspectRatio: 0.75),
-        itemBuilder: (context, index) {
-          final data = allProductsCtrl.allProducts?.data[index];
-          return Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Theme.of(context).scaffoldBackgroundColor),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 22,
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        if (allProductsCtrl.selectedItem != index) {
-                          allProductsCtrl.selectedItem = index;
-                        }
-                      });
-                    },
-                    child: Stack(
-                      children: [
-                        FadedScaleAnimation(
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-                              image: DecorationImage(
-                                  image: NetworkImage(data!.imageUrl), fit: BoxFit.fill),
-                            ),
-                          ),
-                          durationInMilliseconds: 400,
-                        ),
-                        if (allProductsCtrl.selectedItem == index)
-                          Opacity(
-                            opacity: 0.8,
-                            child: Container(
+  Widget itemsPage({
+    required bool isPortrait,
+    required List<Product>? product,
+  }) {
+    if (product != null)
+      return GridView.builder(
+          physics: BouncingScrollPhysics(),
+          padding: EdgeInsetsDirectional.only(top: 16, bottom: 16, start: 16, end: 32),
+          itemCount: product.length,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: isPortrait ? 2 : 4,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
+              childAspectRatio: 0.75),
+          itemBuilder: (context, index) {
+            final Product? prod = product[index];
+            return Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Theme.of(context).scaffoldBackgroundColor),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    flex: 22,
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          if (allProductsCtrl.selectedItem != index) {
+                            allProductsCtrl.selectedItem = index;
+                          }
+                        });
+                      },
+                      child: Stack(
+                        children: [
+                          FadedScaleAnimation(
+                            Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-                                gradient: LinearGradient(
-                                    begin: Alignment.bottomCenter,
-                                    end: Alignment.center,
-                                    colors: [
-                                      Theme.of(context).primaryColor,
-                                      transparentColor,
-                                    ],
-                                    stops: [
-                                      0.2,
-                                      0.75,
-                                    ]),
+                                image: DecorationImage(
+                                    image: NetworkImage(prod!.imageUrl ?? ""), fit: BoxFit.fill),
                               ),
-                            ),
-                          ),
-                        if (allProductsCtrl.selectedItem == index)
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 0.0),
-                              child: Container(
-                                padding: EdgeInsets.symmetric(vertical: 6, horizontal: 6),
-                                child: Obx(() => Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        GestureDetector(
-                                            onTap: () {
-                                              if (allProductsCtrl.allProducts!.data[index]
-                                                      .selectQuantity.value >
-                                                  0.obs.value) {
-                                                --allProductsCtrl
-                                                    .allProducts?.data[index].selectQuantity.value;
-                                              }
-                                            },
-                                            child:
-                                                Icon(Icons.remove, color: Colors.white, size: 20)),
-                                        SizedBox(width: 8),
-                                        CircleAvatar(
-                                          radius: 10,
-                                          backgroundColor: buttonColor,
-                                          child: Text(
-                                            allProductsCtrl
-                                                .allProducts!.data[index].selectQuantity.obs.value
-                                                .toString(),
-                                            // allProductsCtrl.itemsInCartList.length.toString(),
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subtitle1!
-                                                .copyWith(fontSize: 10, color: Colors.white),
-                                          ),
-                                        ),
-                                        SizedBox(width: 8),
-                                        GestureDetector(
-                                          onTap: () {
-                                            ++allProductsCtrl
-                                                .allProducts?.data[index].selectQuantity.value;
-                                          },
-                                          child: Icon(Icons.add, color: Colors.white, size: 20),
-                                        ),
-                                      ],
-                                    )),
-                              ),
-                            ),
-                          ),
-                        Align(
-                          alignment: Alignment.topRight,
-                          child: FadedScaleAnimation(
-                            Container(
-                              height: 20,
-                              width: 30,
-                              child: IconButton(
-                                  icon: Icon(
-                                    Icons.info,
-                                    color: Colors.yellow.shade400,
-                                    size: 18,
-                                  ),
-                                  onPressed: () {
-                                    logger.i(45);
-
-                                    setState(() {
-                                      allProductsCtrl.drawerCount.value = 1;
-                                      allProductsCtrl.products = data;
-                                    });
-                                    _scaffoldKey.currentState!.openEndDrawer();
-                                  }),
                             ),
                             durationInMilliseconds: 400,
                           ),
+                          if (allProductsCtrl.selectedItem == index)
+                            Opacity(
+                              opacity: 0.8,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+                                  gradient: LinearGradient(
+                                      begin: Alignment.bottomCenter,
+                                      end: Alignment.center,
+                                      colors: [
+                                        Theme.of(context).primaryColor,
+                                        transparentColor,
+                                      ],
+                                      stops: [
+                                        0.2,
+                                        0.75,
+                                      ]),
+                                ),
+                              ),
+                            ),
+                          if (allProductsCtrl.selectedItem == index)
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 0.0),
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(vertical: 6, horizontal: 6),
+                                  child: Obx(() => Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          GestureDetector(
+                                              onTap: () {
+                                                if (allProductsCtrl.allProducts!.data[index]
+                                                        .selectQuantity!.value >
+                                                    0.obs.value) {
+                                                  --allProductsCtrl.allProducts?.data[index]
+                                                      .selectQuantity!.value;
+                                                }
+                                              },
+                                              child: Icon(Icons.remove,
+                                                  color: Colors.white, size: 20)),
+                                          SizedBox(width: 8),
+                                          CircleAvatar(
+                                            radius: 10,
+                                            backgroundColor: buttonColor,
+                                            child: Text(
+                                              allProductsCtrl
+                                                  .allProducts!.data[index].selectQuantity.obs.value
+                                                  .toString(),
+                                              // allProductsCtrl.itemsInCartList.length.toString(),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .subtitle1!
+                                                  .copyWith(fontSize: 10, color: Colors.white),
+                                            ),
+                                          ),
+                                          SizedBox(width: 8),
+                                          GestureDetector(
+                                            onTap: () {
+                                              ++allProductsCtrl
+                                                  .allProducts?.data[index].selectQuantity!.value;
+                                            },
+                                            child: Icon(Icons.add, color: Colors.white, size: 20),
+                                          ),
+                                        ],
+                                      )),
+                                ),
+                              ),
+                            ),
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: FadedScaleAnimation(
+                              Container(
+                                height: 20,
+                                width: 30,
+                                child: IconButton(
+                                    icon: Icon(
+                                      Icons.info,
+                                      color: Colors.yellow.shade400,
+                                      size: 18,
+                                    ),
+                                    onPressed: () {
+                                      logger.i(45);
+
+                                      setState(() {
+                                        allProductsCtrl.drawerCount.value = 1;
+                                        // allProductsCtrl.products = category;
+                                      });
+                                      _scaffoldKey.currentState!.openEndDrawer();
+                                    }),
+                              ),
+                              durationInMilliseconds: 400,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      prod.name!,
+                      style: Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 14),
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: true,
+                    ),
+                  ),
+                  Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Row(
+                      children: [
+                        FadedScaleAnimation(
+                          Image.asset(
+                            "assets/ic_veg.png",
+                            scale: 2.5,
+                          ),
+                          durationInMilliseconds: 400,
                         ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        // Text('\$ ' + prod.s!),
                       ],
                     ),
                   ),
-                ),
-                Spacer(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Text(
-                    data.name,
-                    style: Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 14),
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: true,
-                  ),
-                ),
-                Spacer(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Row(
-                    children: [
-                      FadedScaleAnimation(
-                        Image.asset(
-                          "assets/ic_veg.png",
-                          scale: 2.5,
-                        ),
-                        durationInMilliseconds: 400,
-                      ),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      Text('\$ ' + data.productVariations.first.variations.first.sellPriceIncTax),
-                    ],
-                  ),
-                ),
-                Spacer(),
-              ],
-            ),
-          );
-        });
+                  Spacer(),
+                ],
+              ),
+            );
+          });
+    else
+      return SizedBox();
   }
 }

@@ -6,6 +6,8 @@ class AppStorage {
   static String token = "token";
   static String tableData = "tableCount";
 
+  static String lang = "Lang";
+
   static Future<void> write(String key, dynamic value) async {
     await box.write(key, value);
   }

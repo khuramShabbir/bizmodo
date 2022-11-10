@@ -24,6 +24,8 @@ dependencies:
   logger:
   fluttertoast: ^8.1.1
   get_storage: ^2.0.3
+  whatsapp: ^2.0.0
+  url_launcher: ^6.1.6
   # buy_this_app:
   #   git:
   #     url: git@gitlab.com:verbosetech-flutter/buy-this-app-package.git

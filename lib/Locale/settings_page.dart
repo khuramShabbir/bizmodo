@@ -6,6 +6,7 @@ import 'package:hungerz_ordering/Config/app_config.dart';
 import 'package:hungerz_ordering/Controllers/Auth%20Controller/auth_controller.dart';
 import 'package:hungerz_ordering/Controllers/ProductController/all_products_controller.dart';
 import 'package:hungerz_ordering/Controllers/TableSelectionController/table_management_controller.dart';
+import 'package:hungerz_ordering/Pages/login.dart';
 import 'package:hungerz_ordering/Routes/routes.dart';
 import 'package:hungerz_ordering/Services/storage_sevices.dart';
 import 'package:hungerz_ordering/Theme/colors.dart';
@@ -19,6 +20,12 @@ class LanguageList {
 }
 
 class Settings extends StatefulWidget {
+  final isForSetting;
+  final bool allowToNaviGate;
+  Settings({
+    this.isForSetting = false,
+    this.allowToNaviGate = true,
+  });
   @override
   _SettingsState createState() => _SettingsState();
 }
@@ -39,19 +46,23 @@ class _SettingsState extends State<Settings> {
     return Scaffold(
       backgroundColor: Theme.of(context).cardColor,
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: Text('Change Language',
             style: Theme.of(context).textTheme.headline5!.copyWith(fontWeight: FontWeight.bold)),
         titleSpacing: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.chevron_left,
-            size: 30,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+        leading: widget.isForSetting
+            ? IconButton(
+                icon: Icon(
+                  Icons.chevron_left,
+                  size: 30,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            : null,
       ),
       body: Stack(
         children: [
@@ -73,7 +84,9 @@ class _SettingsState extends State<Settings> {
                             .name,
                         style: Theme.of(context).textTheme.bodyText1!.copyWith(color: blackColor),
                       ),
-                      onChanged: (langCode) => setState(() => selectedLocal = langCode as String),
+                      onChanged: (langCode) => setState(() {
+                        selectedLocal = langCode as String;
+                      }),
                     ),
                   );
                 },
@@ -87,21 +100,24 @@ class _SettingsState extends State<Settings> {
           Align(
             alignment: Alignment.bottomCenter,
             child: BottomBar(
-                text: 'Submit',
-                onTap: () {
-                  _languageCubit.setCurrentLanguage(selectedLocal!, true);
-
-                  if (AppStorage.box.hasData(AppStorage.token)) {
-                    Get.put(TableSelectionController());
-                    // Get.put(AllProductsController());
-
-                    Navigator.pushNamed(context, PageRoutes.tableSelectionPage);
-                  } else {
-                    Get.put(AuthController());
-
-                    Navigator.pushNamed(context, PageRoutes.loginPage);
-                  }
-                }),
+              text: 'Submit',
+              onTap: () async {
+                await AppStorage.write(AppStorage.lang, selectedLocal);
+                _languageCubit.setCurrentLanguage(AppStorage.lang, true);
+                if (widget.allowToNaviGate)
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) {
+                        return LoginPage();
+                      },
+                    ),
+                  );
+                else {
+                  Navigator.pop(context);
+                }
+              },
+            ),
           ),
         ],
       ),
