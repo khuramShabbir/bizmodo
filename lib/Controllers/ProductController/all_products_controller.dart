@@ -2,35 +2,33 @@ import 'package:get/get.dart';
 import 'package:hungerz_ordering/Models/ProductsModel/all_products_model.dart';
 import 'package:hungerz_ordering/Services/api_services.dart';
 import 'package:hungerz_ordering/Services/api_urls.dart';
+import 'package:hungerz_ordering/Services/storage_sevices.dart';
 import 'package:hungerz_ordering/const.dart';
 import 'package:hungerz_ordering/utils.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AllProductsController extends GetxController {
-  /// models
   AllProducts? allProducts;
-  Product? products;
-
+  XFile? xFile;
   RxBool isLoaded = false.obs;
-  RxBool itemSelected = false.obs;
-  RxString? img, name;
-  RxInt drawerCount = 0.obs;
-  RxInt currentIndex = 0.obs;
-  int selectedItem = -1.obs;
+  Rxn<Datum?>? category = Rxn<Datum?>();
+  Rxn<Product?>? item = Rxn<Product?>();
 
-  Map<String, dynamic> prodToMap = <String, dynamic>{};
+  RxList<Product?> itemCartList = <Product>[].obs;
 
-  void addCartToMap({
-    required String key,
-    required dynamic products,
-  }) {
-    AppConst.updateMapValues(map: prodToMap, key: key, value: products);
+  void addToCart(Product? item) {
+    itemCartList.add(item);
   }
 
-  int getItemsCountInCart() {
+  void removeToCart(item) {
+    itemCartList.remove(item);
+  }
+
+  int getItemsCountInCart(int index) {
     int items = 0;
     try {
-      for (var value in allProducts!.data) {
-        if (value.selectQuantity!.value != 0) {
+      for (var value in allProducts!.data[index].productsList!) {
+        if (value.selectQuantity != 0) {
           items++;
         }
       }
@@ -40,14 +38,18 @@ class AllProductsController extends GetxController {
     }
   }
 
-  void getAllProducts() async {
-    isLoaded = false.obs;
-
+  Future<void> fetchAllProducts() async {
+    isLoaded.value = false;
     String response = await ApiServices.getMethod(feedUrl: ApiUrls.allProducts);
-
     if (response.isEmpty) return;
+    await AppStorage.write(AppStorage.products, response);
+    getAllProductsFromStorage();
+    isLoaded.value = true;
+  }
 
-    allProducts = allProductsFromJson(response);
+  void getAllProductsFromStorage() async {
+    isLoaded.value = false;
+    allProducts = allProductsFromJson(AppStorage.read(AppStorage.products));
     isLoaded.value = true;
   }
 
@@ -142,4 +144,23 @@ class AllProductsController extends GetxController {
 
     return true;
   }
+
+  ImagePicker picker = ImagePicker();
+  Future<void> getImages() async {
+    xFile = null;
+    String choice = await AppConst.chooseImageSource();
+    if (choice.isEmpty) {
+      return;
+    } else if (choice == "Camera") {
+      xFile = (await picker.pickImage(source: ImageSource.camera, imageQuality: 50));
+    } else if (choice == "Gallery") {
+      xFile = (await picker.pickImage(source: ImageSource.gallery, imageQuality: 50));
+    }
+  }
+}
+
+class Cart {
+  final int id;
+  final String name;
+  Cart({required this.id, required this.name});
 }

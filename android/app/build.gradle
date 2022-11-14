@@ -43,7 +43,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.flutter.hungerz_ordering"
+        applicationId "com.bizmodo_emenu"
         minSdkVersion 21
         targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()

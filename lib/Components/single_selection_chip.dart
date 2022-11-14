@@ -24,10 +24,16 @@ class _SingleSelectionChipState extends State<SingleSelectionChip> {
     List<Widget> choices = [];
     for (var item in widget.chipsDataList) {
       choices.add(Container(
-        padding: const EdgeInsets.all(2.0),
+        padding: const EdgeInsets.all(5.0),
         child: ChoiceChip(
-          label: Text(item),
-          selectedColor: primaryColor.withOpacity(.3),
+          label: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              item,
+              style: TextStyle(color: initChoice == item ? Colors.white : Colors.black),
+            ),
+          ),
+          selectedColor: primaryColor,
           selected: initChoice == item,
           onSelected: (selected) {
             setState(() {

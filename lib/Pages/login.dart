@@ -23,117 +23,108 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: FadedSlideAnimation(
-        Form(
-          key: formKey,
-          child: SingleChildScrollView(
-            child: Container(
-              height: MediaQuery.of(context).size.height,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
+      body: Form(
+        key: formKey,
+        child: SingleChildScrollView(
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FadedScaleAnimation(
+                      Container(
+                        width: 100,
+                        height: 100,
+                        child: Image(
+                          image: AssetImage("assets/appIcon.png"),
+                        ),
+                      ),
+                      durationInMilliseconds: 200,
+                    ),
+                    FadedScaleAnimation(
+                      Text(
+                        "BizModo",
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1!
+                            .copyWith(color: Colors.black, fontSize: 18),
+                      ),
+                      durationInMilliseconds: 200,
+                    ),
+                    SizedBox(height: 20),
+                  ],
+                ),
+                SingleChildScrollView(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      FadedScaleAnimation(
-                        Container(
-                          width: Get.width * .3,
-                          height: Get.width * .3,
-                          child: Image(
-                            image: AssetImage("assets/appIcon.png"),
-                          ),
+                      SizedBox(
+                        width: 300,
+                        child: AppFormField(
+                          keyboardType: TextInputType.emailAddress,
+                          labelText: "User",
+                          validator: (String? v) {
+                            if (v!.isEmpty) return "* user name required";
+                            return null;
+                          },
+                          title: "User Name",
+                          controller: authCtrl.userNameCtrl,
                         ),
-                        durationInMilliseconds: 200,
                       ),
-                      FadedScaleAnimation(
-                        Text(
-                          "BizModo",
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText1!
-                              .copyWith(color: Colors.black, fontSize: 18),
+                      SizedBox(height: 5),
+                      SizedBox(
+                        width: 300,
+                        child: AppFormField(
+                          isPasswordField: true,
+                          labelText: "Password",
+                          validator: (String? v) {
+                            if (v!.isEmpty) return "* password required";
+                            return null;
+                          },
+                          title: "Password",
+                          controller: authCtrl.passwordCtrl,
                         ),
-                        durationInMilliseconds: 200,
-                      )
-                    ],
-                  ),
-                  SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: Get.width * .5,
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            decoration: BoxDecoration(
-                              color: Colors.grey[100],
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: EntryField(
-                              validator: (String? v) {
-                                if (v!.isEmpty) return "* user name required";
-                                return null;
-                              },
-                              title: "User Name",
-                              textCtrl: authCtrl.userNameCtrl,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        Container(
-                          width: Get.width * .5,
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            decoration: BoxDecoration(
-                              color: Colors.grey[100],
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: EntryField(
-                              obSecure: true,
-                              validator: (String? v) {
-                                if (v!.isEmpty) return "* password required";
-                                return null;
-                              },
-                              title: "Password",
-                              textCtrl: authCtrl.passwordCtrl,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        TextButton(
-                            onPressed: () {
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
                               Get.to(() => ForgetPasswordScreen());
                             },
                             child: Text(
                               "Forget Password ?",
                               style: TextStyle(color: primaryColor),
-                            )),
-                        SizedBox(height: 10),
-                        GestureDetector(
-                          onTap: () async {
-                            if (formKey.currentState!.validate()) {
-                              bool token = await authCtrl.getToken();
-                              if (!token) return;
-                              bool login = await authCtrl.getLoginUserDetail();
-                              if (!login) return;
-                              Get.offAll(OrderTypeSelection());
-                            }
-                          },
-                          child: ColorButton("Continue"),
-                        )
-                      ],
-                    ),
+                            ),
+                          ),
+                          SizedBox(width: 30),
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                      GestureDetector(
+                        onTap: () async {
+                          if (formKey.currentState!.validate()) {
+                            bool token = await authCtrl.getToken();
+                            if (!token) return;
+                            bool login = await authCtrl.getLoginUserDetail();
+                            if (!login) return;
+                            Get.offAll(OrderTypeSelection());
+                          }
+                        },
+                        child: ColorButton("Continue"),
+                      )
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
-        beginOffset: Offset(0.0, 0.3),
-        endOffset: Offset(0, 0),
-        slideCurve: Curves.linearToEaseOut,
       ),
     );
   }

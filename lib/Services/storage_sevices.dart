@@ -8,6 +8,8 @@ class AppStorage {
 
   static String lang = "Lang";
 
+  static String products = "products=";
+
   static Future<void> write(String key, dynamic value) async {
     await box.write(key, value);
   }

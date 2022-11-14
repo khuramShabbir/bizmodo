@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.flutter.hungerz_ordering">
+    package="com.bizmodo_emenu">
     <uses-permission android:name="android.permission.INTERNET"/>
 
 

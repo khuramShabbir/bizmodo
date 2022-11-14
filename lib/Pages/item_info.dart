@@ -1,211 +1,186 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:hungerz_ordering/Components/custom_circular_button.dart';
-import 'package:hungerz_ordering/Controllers/ProductController/all_products_controller.dart';
 import 'package:hungerz_ordering/Models/ProductsModel/all_products_model.dart';
 
-import '../Locale/locales.dart';
 import '../Theme/colors.dart';
 
 class ItemInfoPage extends StatefulWidget {
-  final Product? product;
+  final Product? item;
 
-  ItemInfoPage(this.product);
+  ItemInfoPage(this.item);
   @override
   _ItemInfoPageState createState() => _ItemInfoPageState();
 }
 
 class _ItemInfoPageState extends State<ItemInfoPage> {
-  final AllProductsController allProductsCtrl = Get.find<AllProductsController>();
-
+  int selectedModifier = -1;
   @override
   Widget build(BuildContext context) {
-    var locale = AppLocalizations.of(context)!;
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
     return SafeArea(
       child: Drawer(
-        child: widget.product != null
-            ? FadedSlideAnimation(
-                SingleChildScrollView(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    width: MediaQuery.of(context).size.width,
-                    color: Theme.of(context).backgroundColor,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Container(
-                                  width: Get.width * .3,
-                                  child: buildItemsInCartButton(context),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Stack(
-                              children: [
-                                FadedScaleAnimation(
-                                  Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    height: MediaQuery.of(context).size.height * 0.5,
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.vertical(top: Radius.circular(8)),
-                                        image: DecorationImage(
-                                            image: NetworkImage(widget.product!.imageUrl ?? ""),
-                                            fit: BoxFit.cover)),
-                                  ),
-                                  durationInMilliseconds: 400,
-                                ),
-                                Container(
-                                  margin: EdgeInsets.only(top: 10),
-                                  width: MediaQuery.of(context).size.width,
-                                  height: MediaQuery.of(context).size.height * 0.5,
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                        begin: Alignment.bottomCenter,
-                                        end: Alignment.topCenter,
-                                        colors: [
-                                          Theme.of(context).scaffoldBackgroundColor,
-                                          transparentColor
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          0.5
-                                        ]),
-                                  ),
-                                ),
-                              ],
-                            ),
+        child: FadedSlideAnimation(
+          SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              width: MediaQuery.of(context).size.width,
+              color: Theme.of(context).backgroundColor,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      /// Item Image
+                      Stack(
+                        children: [
+                          FadedScaleAnimation(
                             Container(
                               width: MediaQuery.of(context).size.width,
-                              padding: EdgeInsets.only(left: 15, right: 15, top: 8),
+                              height: MediaQuery.of(context).size.height * 0.3,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)),
-                                color: Theme.of(context).scaffoldBackgroundColor,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    widget.product!.name!,
-                                    style: Theme.of(context).textTheme.subtitle1,
+                                  borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
+                                  image: DecorationImage(
+                                      image: NetworkImage(widget.item?.imageUrl ?? ""),
+                                      fit: BoxFit.cover)),
+                            ),
+                            durationInMilliseconds: 400,
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 10),
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height * 0.3,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                  begin: Alignment.bottomCenter,
+                                  end: Alignment.topCenter,
+                                  colors: [
+                                    Theme.of(context).scaffoldBackgroundColor,
+                                    transparentColor
+                                  ],
+                                  stops: [
+                                    0.0,
+                                    0.5
+                                  ]),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      /// Modifiers
+                      Text(
+                        "Add On",
+                        style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                      ),
+                      if (widget.item?.modifier != null)
+                        GridView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: widget.item?.modifier?.length,
+                          shrinkWrap: true,
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: isPortrait ? 2 : 2,
+                            crossAxisSpacing: 16,
+                            mainAxisSpacing: 16,
+                            childAspectRatio: 1,
+                          ),
+                          itemBuilder: (BuildContext context, int index) {
+                            final Product? modifier = widget.item?.modifier?[index].productModifier;
+
+                            return GestureDetector(
+                              onTap: () {
+                                if (selectedModifier == index) {
+                                  selectedModifier == -1;
+                                } else {
+                                  selectedModifier = index;
+                                }
+                                setState(() {});
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  height: 120,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: selectedModifier == index
+                                        ? Theme.of(context).primaryColor
+                                        : Theme.of(context).scaffoldBackgroundColor,
                                   ),
-                                  Row(
+                                  child: Column(
                                     children: [
-                                      Text(
-                                        locale.fastFood!,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .caption!
-                                            .copyWith(height: 1.8),
+                                      FadedScaleAnimation(
+                                        CachedNetworkImage(
+                                          imageUrl: modifier?.imageUrl ?? "",
+                                          imageBuilder: (context, imageProvider) => Container(
+                                            height: 70,
+                                            width: 90,
+                                            decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                image: imageProvider,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                          placeholder: (context, url) => SizedBox(
+                                            width: 10,
+                                            height: 10,
+                                            child: CircularProgressIndicator(
+                                                color: primaryColor, strokeWidth: 1),
+                                          ),
+                                          errorWidget: (context, url, error) => Icon(Icons.error),
+                                        ),
+                                        durationInMilliseconds: 400,
                                       ),
+                                      Text(modifier?.name ?? ""),
                                       Spacer(),
-                                      Text(
-                                        '\$12.00',
-                                        style: Theme.of(context).textTheme.bodyText2,
-                                      )
                                     ],
                                   ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(locale.addOptions!,
-                                      style: Theme.of(context).textTheme.caption!.copyWith(
-                                          fontWeight: FontWeight.w500, letterSpacing: 1.5)),
-                                  buildAddOption(context, 'Extra Cheese', '\$5.00'),
-                                  buildAddOption(context, 'Extra Honey', '\$3.00'),
-                                  buildAddOption(context, 'Extra Mayonnaise', '\$4.00'),
-                                  SizedBox(height: 20),
-                                ],
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                // ++widget.product!.selectQuantity.value;
-                              },
-                              child: Container(
-                                height: 50,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)),
-                                    color: Theme.of(context).primaryColor),
-                                width: MediaQuery.of(context).size.width,
-                                child: Center(
-                                  child: Text(
-                                    locale.addToCart!,
-                                    style: Theme.of(context).textTheme.bodyText1,
+                                ),
+                              )
+                              /*Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color:
+                                          selectedModifier == index ? primaryColor : Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(width: 1, color: Colors.grey)),
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          modifier?.productModifier.name ?? "",
+                                          style: TextStyle(color: Colors.grey),
+                                        ),
+                                        Text(
+                                          "\$ 1.0",
+                                          style: TextStyle(color: Colors.grey),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
+                              )*/
+                              ,
+                            );
+                          },
+                        )
+                    ],
                   ),
-                ),
-                beginOffset: Offset(0, 0.3),
-                endOffset: Offset(0, 0),
-                curve: Curves.linearToEaseOut,
-              )
-            : null,
-      ),
-    );
-  }
-
-  Container buildAddOption(
-    BuildContext context,
-    String title,
-    String price,
-  ) {
-    bool? val = title == 'Extra Cheese' ? true : false;
-    return Container(
-      height: 30,
-      child: Row(
-        children: [
-          Transform.scale(
-              scale: 0.7,
-              child: Checkbox(
-                activeColor: Theme.of(context).primaryColor,
-                checkColor: Theme.of(context).scaffoldBackgroundColor,
-                value: val,
-                onChanged: (bool? value) {
-                  setState(() {
-                    val = value;
-                  });
-                },
-              )),
-          Text(
-            title,
-            style: Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 14),
+                ],
+              ),
+            ),
           ),
-          Spacer(),
-          Text(price)
-        ],
+          beginOffset: Offset(0, 0.3),
+          endOffset: Offset(0, 0),
+          curve: Curves.linearToEaseOut,
+        ),
       ),
-    );
-  }
-
-  CustomButton buildItemsInCartButton(BuildContext context) {
-    var locale = AppLocalizations.of(context)!;
-    return CustomButton(
-      onTap: () {},
-      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-      title: Obx(() {
-        return Text(
-          "${locale.itemsInCart!} ( ${allProductsCtrl.getItemsCountInCart()})",
-          style: Theme.of(context).textTheme.bodyText1,
-        );
-      }),
-      bgColor: buttonColor,
     );
   }
 }

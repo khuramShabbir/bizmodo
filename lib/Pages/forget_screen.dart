@@ -56,22 +56,16 @@ class ForgetPasswordScreen extends StatelessWidget {
             Image(
               image: AssetImage("assets/appIcon.png"),
             ),
-            Container(
-              width: Get.width * .5,
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: EntryField(
-                  validator: (String? v) {
-                    if (v!.isEmpty) return "* user name required";
-                    return null;
-                  },
-                  title: "User Name",
-                  textCtrl: textEditingController,
-                ),
+            SizedBox(
+              width: 300,
+              child: AppFormField(
+                labelText: "User",
+                validator: (String? v) {
+                  if (v!.isEmpty) return "* user name required";
+                  return null;
+                },
+                title: "User Name",
+                controller: textEditingController,
               ),
             ),
             SizedBox(height: 10),

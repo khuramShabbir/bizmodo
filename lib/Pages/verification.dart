@@ -34,7 +34,7 @@ class Verification extends StatelessWidget {
                       height: 10,
                     ),
                     Text(
-                      "ENTER VERIFICAITON CODE",
+                      "ENTER VERIFICATION CODE",
                       style: Theme.of(context).textTheme.bodyText1!.copyWith(
                           fontSize: 16,
                           color: Colors.blueGrey.shade700,
@@ -63,9 +63,9 @@ class Verification extends StatelessWidget {
                             )),
                       ],
                     ),
-                    EntryField(
+                    AppFormField(
                       title: "5 7 8 4 1 0",
-                      textCtrl: TextEditingController(),
+                      controller: TextEditingController(),
                     )
                   ],
                 ),

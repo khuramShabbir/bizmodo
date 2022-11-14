@@ -54,7 +54,7 @@ class OrderTypeSelection extends StatelessWidget {
               child: Form(
                 key: formKey,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
                       "Select Order Type,".obs.value,
@@ -232,9 +232,9 @@ class OrderTypeSelection extends StatelessWidget {
         width: Get.width * .7,
         child: Padding(
           padding: const EdgeInsets.only(left: 5),
-          child: EntryField(
+          child: AppFormField(
             validator: validator,
-            textCtrl: controller,
+            controller: controller,
             title: text,
           ),
         ),

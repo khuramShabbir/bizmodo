@@ -3,7 +3,6 @@
 //     final allProducts = allProductsFromJson(jsonString);
 
 import 'package:get/get.dart';
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 AllProducts allProductsFromJson(String str) => AllProducts.fromJson(json.decode(str));
@@ -15,29 +14,29 @@ class AllProducts {
     required this.currentPage,
     required this.data,
     required this.firstPageUrl,
-    required this.from,
+    this.from,
     required this.lastPage,
     required this.lastPageUrl,
     required this.nextPageUrl,
     required this.path,
     required this.perPage,
     required this.prevPageUrl,
-    required this.to,
-    required this.total,
+    this.to,
+    this.total,
   });
 
   int currentPage;
   List<Datum> data;
   String firstPageUrl;
-  int from;
+  int? from;
   int lastPage;
   String lastPageUrl;
   dynamic nextPageUrl;
   String path;
   int perPage;
   dynamic prevPageUrl;
-  int to;
-  int total;
+  int? to;
+  int? total;
 
   factory AllProducts.fromJson(Map<String, dynamic> json) => AllProducts(
         currentPage: json["current_page"],
@@ -87,7 +86,7 @@ class Datum {
     required this.deletedAt,
     required this.createdAt,
     required this.updatedAt,
-    required this.products,
+    required this.productsList,
   });
   RxInt? selectQuantity;
   int? id;
@@ -104,7 +103,7 @@ class Datum {
   DateTime? deletedAt;
   DateTime? createdAt;
   DateTime? updatedAt;
-  List<Product>? products;
+  List<Product>? productsList;
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         selectQuantity: 0.obs,
@@ -122,7 +121,7 @@ class Datum {
         deletedAt: json["deleted_at"],
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
-        products: List<Product>.from(json["products"].map((x) => Product.fromJson(x))),
+        productsList: List<Product>.from(json["products"].map((x) => Product.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -141,7 +140,7 @@ class Datum {
         "deleted_at": deletedAt,
         "created_at": createdAt?.toIso8601String(),
         "updated_at": updatedAt?.toIso8601String(),
-        "products": List<dynamic>.from(products!.map((x) => x.toJson())),
+        "products": List<dynamic>.from(productsList!.map((x) => x.toJson())),
       };
 }
 
@@ -149,23 +148,23 @@ class Modifier {
   Modifier({
     required this.modifierSetId,
     required this.productId,
-    required this.productmodifier,
+    required this.productModifier,
   });
 
   int modifierSetId;
   int productId;
-  Product productmodifier;
+  Product productModifier;
 
   factory Modifier.fromJson(Map<String, dynamic> json) => Modifier(
         modifierSetId: json["modifier_set_id"],
         productId: json["product_id"],
-        productmodifier: Product.fromJson(json["productmodifier"]),
+        productModifier: Product.fromJson(json["productmodifier"]),
       );
 
   Map<String, dynamic> toJson() => {
         "modifier_set_id": modifierSetId,
         "product_id": productId,
-        "productmodifier": productmodifier.toJson(),
+        "productmodifier": productModifier.toJson(),
       };
 }
 
@@ -209,8 +208,9 @@ class Product {
     this.modifierSets = const [],
     this.variations = const [],
     this.pivot,
+    this.selectQuantity = 0,
   });
-
+  int selectQuantity;
   int? id;
   String? name;
   int? businessId;
@@ -251,6 +251,7 @@ class Product {
   Pivot? pivot;
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
+        selectQuantity: 0,
         id: json["id"],
         name: json["name"] ?? "",
         businessId: json["business_id"],
@@ -298,6 +299,7 @@ class Product {
       );
 
   Map<String, dynamic> toJson() => {
+        "selectQuantity": selectQuantity,
         "id": id,
         "name": name,
         "business_id": businessId,
