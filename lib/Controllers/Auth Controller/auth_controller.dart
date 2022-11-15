@@ -12,8 +12,8 @@ class AuthController extends GetxController {
   TextEditingController passwordCtrl = TextEditingController();
   Rxn<OauthModel>? oauthModel;
   final String _grantType = "password";
-  final String _clientId = "3";
-  final String _clientSecret = "19uTuszuxCpFB5UthvAgKZ4vE09xgaSImJxEj03m";
+  final String _clientId = "7";
+  final String _clientSecret = "C30C6RIW3dxtQMQcKRMCXlT3smG106t5OYoaySoN";
   final String _scope = "";
 
   Future<bool> getToken() async {
