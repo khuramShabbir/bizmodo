@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:hungerz_ordering/Controllers/Auth%20Controller/auth_controller.dart';
-import 'package:hungerz_ordering/Controllers/ProductController/all_products_controller.dart';
-import 'package:hungerz_ordering/Controllers/TableSelectionController/table_management_controller.dart';
-import 'package:hungerz_ordering/Controllers/order_type_controller.dart';
-import 'package:hungerz_ordering/Locale/settings_page.dart';
-import 'package:hungerz_ordering/Pages/order_type_selection.dart';
-import 'package:hungerz_ordering/Pages/table_selection.dart';
-import 'package:hungerz_ordering/Services/storage_sevices.dart';
+
+import '/Controllers/Auth%20Controller/auth_controller.dart';
+import '/Controllers/ProductController/all_products_controller.dart';
+import '/Controllers/TableSelectionController/table_management_controller.dart';
+import '/Controllers/order_type_controller.dart';
+import '/Locale/settings_page.dart';
+import '/Pages/order_type_selection.dart';
+import '/Services/storage_sevices.dart';
 import 'Locale/language_cubit.dart';
 import 'Locale/locales.dart';
 import 'Routes/routes.dart';

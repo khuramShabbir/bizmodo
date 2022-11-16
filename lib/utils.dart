@@ -1,8 +1,9 @@
-import 'package:get/get.dart';
-import 'package:hungerz_ordering/Theme/colors.dart';
-import 'package:logger/logger.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:logger/logger.dart';
+
+import '/Theme/colors.dart';
 
 Logger logger = Logger();
 

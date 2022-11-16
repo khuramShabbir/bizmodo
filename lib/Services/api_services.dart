@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:hungerz_ordering/Services/api_urls.dart';
-import 'package:hungerz_ordering/utils.dart';
 
+import '/Services/api_urls.dart';
+import '/utils.dart';
 import 'storage_sevices.dart';
 
 class ApiServices {

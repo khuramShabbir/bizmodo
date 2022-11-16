@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:hungerz_ordering/Theme/colors.dart';
+
+import '/Theme/colors.dart';
 
 class AppFormField extends StatefulWidget {
   final String? labelText;

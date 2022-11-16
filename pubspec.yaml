@@ -1,4 +1,4 @@
-name: hungerz_ordering
+name: bizmodo_emenu
 description: A new Flutter application.
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -49,7 +49,7 @@ flutter_icons:
   image_path: "assets/appicon.png"
 
 flutter_launcher_name:
-  name: "Hungerz eMenu"
+  name: "BizModo eMenu"
 
 flutter:
   uses-material-design: true

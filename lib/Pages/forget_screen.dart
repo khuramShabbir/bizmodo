@@ -1,8 +1,9 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hungerz_ordering/Components/custom_circular_button.dart';
-import 'package:hungerz_ordering/Components/textfield.dart';
+
+import '/Components/custom_circular_button.dart';
+import '/Components/textfield.dart';
 
 class ForgetPasswordScreen extends StatelessWidget {
   ForgetPasswordScreen({Key? key}) : super(key: key);

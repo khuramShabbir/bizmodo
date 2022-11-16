@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hungerz_ordering/Components/custom_circular_button.dart';
-import 'package:hungerz_ordering/utils.dart';
+
+import '/Components/custom_circular_button.dart';
+import '/utils.dart';
 
 class AppConst {
   static void updateMapValues({

@@ -1,14 +1,13 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hungerz_ordering/Components/colorButton.dart';
-import 'package:hungerz_ordering/Components/textfield.dart';
-import 'package:hungerz_ordering/Controllers/Auth%20Controller/auth_controller.dart';
-import 'package:hungerz_ordering/Controllers/TableSelectionController/table_management_controller.dart';
-import 'package:hungerz_ordering/Pages/forget_screen.dart';
-import 'package:hungerz_ordering/Pages/order_type_selection.dart';
-import 'package:hungerz_ordering/Theme/colors.dart';
-import 'table_selection.dart';
+
+import '/Components/colorButton.dart';
+import '/Components/textfield.dart';
+import '/Controllers/Auth%20Controller/auth_controller.dart';
+import '/Pages/forget_screen.dart';
+import '/Pages/order_type_selection.dart';
+import '/Theme/colors.dart';
 
 class LoginPage extends StatefulWidget {
   @override

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hungerz_ordering/const/terms_and_condation.dart';
+
+import '/const/terms_and_condation.dart';
 
 class TermsAndConditions extends StatelessWidget {
   const TermsAndConditions({Key? key}) : super(key: key);

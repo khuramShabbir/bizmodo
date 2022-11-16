@@ -1,11 +1,12 @@
 import 'package:get/get.dart';
-import 'package:hungerz_ordering/Models/ProductsModel/all_products_model.dart';
-import 'package:hungerz_ordering/Services/api_services.dart';
-import 'package:hungerz_ordering/Services/api_urls.dart';
-import 'package:hungerz_ordering/Services/storage_sevices.dart';
-import 'package:hungerz_ordering/const.dart';
-import 'package:hungerz_ordering/utils.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '/Models/ProductsModel/all_products_model.dart';
+import '/Services/api_services.dart';
+import '/Services/api_urls.dart';
+import '/Services/storage_sevices.dart';
+import '/const.dart';
+import '/utils.dart';
 
 class AllProductsController extends GetxController {
   AllProducts? allProducts;

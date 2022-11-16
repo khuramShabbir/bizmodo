@@ -1,11 +1,12 @@
 import 'package:animation_wrappers/Animations/faded_scale_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hungerz_ordering/Components/custom_circular_button.dart';
-import 'package:hungerz_ordering/Components/single_selection_chip.dart';
-import 'package:hungerz_ordering/Components/textfield.dart';
-import 'package:hungerz_ordering/Controllers/order_type_controller.dart';
-import 'package:hungerz_ordering/Pages/table_selection.dart';
+
+import '/Components/custom_circular_button.dart';
+import '/Components/single_selection_chip.dart';
+import '/Components/textfield.dart';
+import '/Controllers/order_type_controller.dart';
+import '/Pages/table_selection.dart';
 
 class OrderTypeSelection extends StatelessWidget {
   OrderTypeSelection({Key? key}) : super(key: key);

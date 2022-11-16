@@ -2,10 +2,11 @@ import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hungerz_ordering/Controllers/ProductController/all_products_controller.dart';
-import 'package:hungerz_ordering/Models/ProductsModel/all_products_model.dart';
-import 'package:hungerz_ordering/Pages/item_info.dart';
-import 'package:hungerz_ordering/Theme/colors.dart';
+
+import '/Controllers/ProductController/all_products_controller.dart';
+import '/Models/ProductsModel/all_products_model.dart';
+import '/Pages/item_info.dart';
+import '/Theme/colors.dart';
 
 class ItemsPage extends StatefulWidget {
   final Datum? category;

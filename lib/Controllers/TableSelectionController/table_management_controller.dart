@@ -1,8 +1,9 @@
 import 'dart:convert';
+
 import 'package:get/get.dart';
-import 'package:hungerz_ordering/Models/TableManagemenModel/table_management_model.dart';
-import 'package:hungerz_ordering/Services/storage_sevices.dart';
-import 'package:hungerz_ordering/utils.dart';
+
+import '/Models/TableManagemenModel/table_management_model.dart';
+import '/Services/storage_sevices.dart';
 
 class TableSelectionController extends GetxController {
   int tableCount = 10;

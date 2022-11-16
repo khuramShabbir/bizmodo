@@ -1,10 +1,12 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show SynchronousFuture;
-import 'package:hungerz_ordering/Config/app_config.dart';
-import 'package:hungerz_ordering/Locale/Languages/german.dart';
-import 'package:hungerz_ordering/Locale/Languages/romanian.dart';
-import 'dart:async';
+import 'package:flutter/material.dart';
+
+import '/Config/app_config.dart';
+import '/Locale/Languages/german.dart';
+import '/Locale/Languages/romanian.dart';
 import 'Languages/arabic.dart';
 import 'Languages/english.dart';
 import 'Languages/french.dart';
@@ -168,7 +170,7 @@ class AppLocalizations {
   String? get noOrder {
     return _localizedValues[locale.languageCode]!['noOrder'];
   }
-  
+
   static List<Locale> getSupportedLocales() {
     List<Locale> toReturn = [];
     for (String langCode in AppConfig.languagesSupported.keys) {
@@ -178,15 +180,12 @@ class AppLocalizations {
   }
 }
 
-
-
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
   const AppLocalizationsDelegate();
-  
+
   @override
   bool isSupported(Locale locale) =>
       AppConfig.languagesSupported.keys.contains(locale.languageCode);
-
 
   @override
   Future<AppLocalizations> load(Locale locale) {

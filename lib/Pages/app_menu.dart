@@ -1,13 +1,13 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hungerz_ordering/Locale/settings_page.dart';
-import 'package:hungerz_ordering/Services/storage_sevices.dart';
-import 'package:hungerz_ordering/Theme/colors.dart';
-import 'package:hungerz_ordering/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:whatsapp/whatsapp.dart';
 
+import '/Locale/settings_page.dart';
+import '/Services/storage_sevices.dart';
+import '/Theme/colors.dart';
+import '/utils.dart';
 import 'profile_view.dart';
 import 'terms_and_condations.dart';
 

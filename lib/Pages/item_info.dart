@@ -1,8 +1,8 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:hungerz_ordering/Models/ProductsModel/all_products_model.dart';
 
+import '/Models/ProductsModel/all_products_model.dart';
 import '../Theme/colors.dart';
 
 class ItemInfoPage extends StatefulWidget {

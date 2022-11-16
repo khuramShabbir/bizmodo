@@ -1,5 +1,6 @@
 import 'package:get_storage/get_storage.dart';
-import 'package:hungerz_ordering/Models/AuthModels/o_auth_model.dart';
+
+import '/Models/AuthModels/o_auth_model.dart';
 
 class AppStorage {
   static final box = GetStorage();

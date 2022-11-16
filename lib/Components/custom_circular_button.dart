@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hungerz_ordering/Theme/colors.dart';
+
+import '/Theme/colors.dart';
 
 class CustomButton extends StatelessWidget {
   final Widget? title;

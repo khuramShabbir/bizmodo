@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hungerz_ordering/Config/app_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '/Config/app_config.dart';
 
 class LanguageCubit extends Cubit<Locale> {
   LanguageCubit() : super(Locale('en'));
@@ -20,8 +21,7 @@ class LanguageCubit extends Cubit<Locale> {
 
   setCurrentLanguage(String langCode, bool save) async {
     if (save) {
-      SharedPreferences sharedPreferences =
-          await SharedPreferences.getInstance();
+      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
       sharedPreferences.setString("currentLanguageKey", langCode);
     }
     localeSelected(langCode);

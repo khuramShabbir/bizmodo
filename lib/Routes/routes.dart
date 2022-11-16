@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hungerz_ordering/Pages/home_page.dart';
-import 'package:hungerz_ordering/Pages/login.dart';
-import 'package:hungerz_ordering/Pages/table_selection.dart';
+
+import '/Pages/home_page.dart';
+import '/Pages/login.dart';
+import '/Pages/table_selection.dart';
 
 class PageRoutes {
   static const String homePage = 'home_page';

@@ -2,16 +2,16 @@ import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hungerz_ordering/Components/custom_circular_button.dart';
-import 'package:hungerz_ordering/Controllers/ProductController/all_products_controller.dart';
-import 'package:hungerz_ordering/Locale/locales.dart';
-import 'package:hungerz_ordering/Pages/item_info.dart';
-import 'package:hungerz_ordering/Pages/items_page.dart';
-import 'package:hungerz_ordering/Pages/orderPlaced.dart';
-import 'package:hungerz_ordering/Services/storage_sevices.dart';
-import 'package:hungerz_ordering/Theme/colors.dart';
-import 'package:hungerz_ordering/utils.dart';
 
+import '/Components/custom_circular_button.dart';
+import '/Controllers/ProductController/all_products_controller.dart';
+import '/Locale/locales.dart';
+import '/Pages/item_info.dart';
+import '/Pages/items_page.dart';
+import '/Pages/orderPlaced.dart';
+import '/Services/storage_sevices.dart';
+import '/Theme/colors.dart';
+import '/utils.dart';
 import '../Models/ProductsModel/all_products_model.dart';
 
 class HomePage extends StatefulWidget {

@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:hungerz_ordering/Services/api_services.dart';
-import 'package:hungerz_ordering/Services/api_urls.dart';
-import 'package:hungerz_ordering/Services/storage_sevices.dart';
-import 'package:hungerz_ordering/utils.dart';
 
 import '/Models/AuthModels/o_auth_model.dart';
+import '/Services/api_services.dart';
+import '/Services/api_urls.dart';
+import '/Services/storage_sevices.dart';
+import '/utils.dart';
 
 class AuthController extends GetxController {
   TextEditingController userNameCtrl = TextEditingController();

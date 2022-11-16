@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
-import 'package:hungerz_ordering/Components/bottom_bar.dart';
-import 'package:hungerz_ordering/Config/app_config.dart';
-import 'package:hungerz_ordering/Controllers/Auth%20Controller/auth_controller.dart';
-import 'package:hungerz_ordering/Controllers/ProductController/all_products_controller.dart';
-import 'package:hungerz_ordering/Controllers/TableSelectionController/table_management_controller.dart';
-import 'package:hungerz_ordering/Pages/login.dart';
-import 'package:hungerz_ordering/Routes/routes.dart';
-import 'package:hungerz_ordering/Services/storage_sevices.dart';
-import 'package:hungerz_ordering/Theme/colors.dart';
 
+import '/Components/bottom_bar.dart';
+import '/Config/app_config.dart';
+import '/Pages/login.dart';
+import '/Services/storage_sevices.dart';
+import '/Theme/colors.dart';
 import 'language_cubit.dart';
 
 class LanguageList {

@@ -3,13 +3,13 @@ import 'dart:convert';
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hungerz_ordering/Controllers/ProductController/all_products_controller.dart';
-import 'package:hungerz_ordering/Controllers/TableSelectionController/table_management_controller.dart';
-import 'package:hungerz_ordering/Models/TableManagemenModel/table_management_model.dart';
-import 'package:hungerz_ordering/Pages/app_menu.dart';
-import 'package:hungerz_ordering/Pages/home_page.dart';
-import 'package:hungerz_ordering/Services/storage_sevices.dart';
-import 'package:hungerz_ordering/utils.dart';
+
+import '/Controllers/TableSelectionController/table_management_controller.dart';
+import '/Models/TableManagemenModel/table_management_model.dart';
+import '/Pages/app_menu.dart';
+import '/Pages/home_page.dart';
+import '/Services/storage_sevices.dart';
+import '/utils.dart';
 
 class TableSelectionPage extends StatefulWidget {
   @override

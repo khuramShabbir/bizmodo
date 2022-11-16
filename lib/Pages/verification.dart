@@ -1,8 +1,9 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
-import 'package:hungerz_ordering/Components/colorButton.dart';
-import 'package:hungerz_ordering/Components/textfield.dart';
-import 'package:hungerz_ordering/Pages/home_page.dart';
+
+import '/Components/colorButton.dart';
+import '/Components/textfield.dart';
+import '/Pages/home_page.dart';
 
 class Verification extends StatelessWidget {
   @override
