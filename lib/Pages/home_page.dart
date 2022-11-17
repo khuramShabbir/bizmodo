@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 import '/Components/custom_circular_button.dart';
 import '/Controllers/ProductController/all_products_controller.dart';
+import '/Controllers/ProductController/product_cart_controller.dart';
 import '/Locale/locales.dart';
 import '/Pages/item_info.dart';
 import '/Pages/items_page.dart';
@@ -25,17 +26,18 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int drawerCount = 0;
   int currentIndex = 0;
-  PageController _pageController = PageController();
+  final PageController _pageController = PageController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  AllProductsController allProductsController = Get.find<AllProductsController>();
+  final AllProductsController allProdCtrlObj = Get.find<AllProductsController>();
+  final ProductCartController prodCartCtrlObj = Get.find<ProductCartController>();
 
   @override
   void initState() {
     if (!AppStorage.box.hasData(AppStorage.products)) {
-      allProductsController.fetchAllProducts();
+      allProdCtrlObj.fetchAllProducts();
     } else {
-      allProductsController.getAllProductsFromStorage();
+      allProdCtrlObj.getAllProductsFromStorage();
     }
     super.initState();
   }
@@ -43,7 +45,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
-    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final isPortrait = Get.mediaQuery.orientation == Orientation.portrait;
 
     return Scaffold(
       key: _scaffoldKey,
@@ -51,22 +53,22 @@ class _HomePageState extends State<HomePage> {
         child: SafeArea(
           child: Stack(
             children: [
+              // List of cart items
               ListView(
-                physics: BouncingScrollPhysics(),
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
                         child: Text(
-                          locale.tableNo! + '${widget.index}',
+                          locale.tableNo! + ' ${widget.index}',
                           style: Theme.of(context)
                               .textTheme
                               .subtitle1!
                               .copyWith(fontSize: 14, fontWeight: FontWeight.bold),
                         ),
                       ),
-                      Spacer(),
                       buildItemsInCartButton(context),
                     ],
                   ),
@@ -74,126 +76,120 @@ class _HomePageState extends State<HomePage> {
                     return ListView.builder(
                         physics: NeverScrollableScrollPhysics(),
                         padding: EdgeInsets.only(bottom: 150),
-                        itemCount: allProductsController.itemCartList.length,
+                        itemCount: prodCartCtrlObj.itemCartList.length,
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
-                          Product? product = allProductsController.itemCartList[index];
+                          Product? product = prodCartCtrlObj.itemCartList[index];
 
-                          return Column(
-                            children: [
-                              ListTile(
-                                contentPadding: EdgeInsets.symmetric(vertical: 2, horizontal: 10),
-                                leading: GestureDetector(
-                                  onTap: () {
-                                    if (allProductsController.item != null)
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ItemInfoPage(allProductsController.item!.value)));
-                                  },
-                                  child: FadedScaleAnimation(
-                                    ClipRRect(
-                                        borderRadius: BorderRadius.circular(8),
-                                        child: FadedScaleAnimation(
-                                          CachedNetworkImage(
-                                            imageUrl: product?.imageUrl ?? "",
-                                          ),
-                                          durationInMilliseconds: 400,
-                                        )),
-                                    durationInMilliseconds: 400,
-                                  ),
-                                ),
-                                title: Padding(
-                                  padding: const EdgeInsets.only(bottom: 10.0),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        product?.name ?? "",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle1!
-                                            .copyWith(fontSize: 14),
+                          return ListTile(
+                            contentPadding: EdgeInsets.symmetric(vertical: 2, horizontal: 10),
+                            leading: GestureDetector(
+                              onTap: () {
+                                if (prodCartCtrlObj.item != null)
+                                  Get.to(() => ItemInfoPage(prodCartCtrlObj.item!.value));
+                              },
+                              child: FadedScaleAnimation(
+                                ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: FadedScaleAnimation(
+                                      CachedNetworkImage(
+                                        imageUrl: product?.imageUrl ?? "",
                                       ),
-                                      SizedBox(width: 8),
-                                    ],
+                                      durationInMilliseconds: 400,
+                                    )),
+                                durationInMilliseconds: 400,
+                              ),
+                            ),
+                            title: Padding(
+                              padding: const EdgeInsets.only(bottom: 10.0),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    product?.name ?? "",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .subtitle1!
+                                        .copyWith(fontSize: 14),
                                   ),
-                                ),
-                                subtitle: Column(
+                                  SizedBox(width: 8),
+                                ],
+                              ),
+                            ),
+                            subtitle: Column(
+                              children: [
+                                Row(
                                   children: [
-                                    Row(
-                                      children: [
-                                        Container(
-                                          padding: EdgeInsets.symmetric(vertical: 6, horizontal: 6),
-                                          decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(20),
-                                              border: Border.all(color: newOrderColor, width: 0.2)),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              GestureDetector(
-                                                  onTap: () {
-                                                    if (product!.selectQuantity > 0) {
-                                                      product.selectQuantity--;
-                                                      logger.i(product.selectQuantity);
-                                                      setState(() {});
-                                                    }
-                                                  },
-                                                  child: Icon(
-                                                    Icons.remove,
-                                                    color: newOrderColor,
-                                                    size: 16,
-                                                  )),
-                                              SizedBox(
-                                                width: 8,
-                                              ),
-                                              Text(
-                                                product!.selectQuantity.toString(),
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .subtitle1!
-                                                    .copyWith(fontSize: 12),
-                                              ),
-                                              SizedBox(
-                                                width: 8,
-                                              ),
-                                              GestureDetector(
-                                                  onTap: () {
-                                                    if (product.selectQuantity != 0) {
-                                                      product.selectQuantity++;
-                                                      logger.i(product.selectQuantity);
-                                                      setState(() {});
-                                                    }
-                                                  },
-                                                  child: Icon(
-                                                    Icons.add,
-                                                    color: newOrderColor,
-                                                    size: 16,
-                                                  )),
-                                            ],
+                                    Container(
+                                      padding: EdgeInsets.symmetric(vertical: 6, horizontal: 6),
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(20),
+                                          border: Border.all(color: newOrderColor, width: 0.2)),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          GestureDetector(
+                                              onTap: () {
+                                                prodCartCtrlObj.removeToCart(product);
+                                                if (product!.selectQuantity > 0) {
+                                                  product.selectQuantity--;
+                                                  logger.i(product.selectQuantity);
+                                                  setState(() {});
+                                                }
+                                              },
+                                              child: Icon(
+                                                Icons.remove,
+                                                color: newOrderColor,
+                                                size: 16,
+                                              )),
+                                          SizedBox(
+                                            width: 8,
                                           ),
-                                        ),
-                                        Spacer(),
-                                        Text(
-                                          '\$' +
-                                              totalAmount(
-                                                  qty: product.selectQuantity,
-                                                  price: product.variations!.first.sellPriceIncTax),
-                                          style: TextStyle(color: Colors.black),
-                                        )
-                                      ],
+                                          Text(
+                                            product!.selectQuantity.toString(),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle1!
+                                                .copyWith(fontSize: 12),
+                                          ),
+                                          SizedBox(
+                                            width: 8,
+                                          ),
+                                          GestureDetector(
+                                              onTap: () {
+                                                if (product.selectQuantity != 0) {
+                                                  product.selectQuantity++;
+                                                  logger.i(product.selectQuantity);
+                                                  setState(() {});
+                                                }
+                                              },
+                                              child: Icon(
+                                                Icons.add,
+                                                color: newOrderColor,
+                                                size: 16,
+                                              )),
+                                        ],
+                                      ),
                                     ),
+                                    Spacer(),
+                                    Text(
+                                      '\$' +
+                                          totalAmount(
+                                              qty: product.selectQuantity,
+                                              price: product.variations!.first.sellPriceIncTax),
+                                      style: TextStyle(color: Colors.black),
+                                    )
                                   ],
                                 ),
-                              ),
-                              // SizedBox(height: 200,),
-                            ],
+                              ],
+                            ),
                           );
                         });
                   })
                 ],
               ),
+
+              // Total Price
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
@@ -242,7 +238,7 @@ class _HomePageState extends State<HomePage> {
         title: FadedScaleAnimation(
           GestureDetector(
             onTap: () async {
-              await allProductsController.fetchAllProducts();
+              await allProdCtrlObj.fetchAllProducts();
             },
             child: Row(
               children: [
@@ -287,7 +283,7 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       body: Obx(
-        () => allProductsController.isLoaded.value
+        () => allProdCtrlObj.isLoaded.value
             ? Container(
                 color: Theme.of(context).backgroundColor,
                 child: Row(
@@ -296,12 +292,12 @@ class _HomePageState extends State<HomePage> {
                       width: 100,
                       child: ListView.builder(
                           physics: BouncingScrollPhysics(),
-                          itemCount: allProductsController.allProducts?.data.length ?? 0,
+                          itemCount: allProdCtrlObj.allProducts?.data.length ?? 0,
                           itemBuilder: (context, index) {
-                            Datum? category = allProductsController.allProducts?.data[index];
+                            Datum? category = allProdCtrlObj.allProducts?.data[index];
                             Future.delayed(Duration.zero, () {
-                              if (allProductsController.category?.value == null) {
-                                allProductsController.category?.value = category!;
+                              if (allProdCtrlObj.category?.value == null) {
+                                allProdCtrlObj.category?.value = category!;
                               }
                             });
                             return InkWell(
@@ -312,17 +308,19 @@ class _HomePageState extends State<HomePage> {
                                 setState(() {
                                   currentIndex = index;
                                 });
-                                allProductsController.category?.value = category!;
+                                allProdCtrlObj.category?.value = category!;
                               },
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                  height: 120,
-                                  decoration: BoxDecoration(
+                              child: Container(
+                                height: 120,
+                                margin: const EdgeInsets.all(5.0),
+                                child: Card(
+                                  margin: const EdgeInsets.all(0),
+                                  clipBehavior: Clip.hardEdge,
+                                  color: currentIndex == index
+                                      ? Theme.of(context).primaryColor
+                                      : Theme.of(context).scaffoldBackgroundColor,
+                                  shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
-                                    color: currentIndex == index
-                                        ? Theme.of(context).primaryColor
-                                        : Theme.of(context).scaffoldBackgroundColor,
                                   ),
                                   child: Column(
                                     children: [
@@ -349,14 +347,20 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                         durationInMilliseconds: 400,
                                       ),
-                                      Text(
-                                        category?.name ?? "".toUpperCase(),
-                                        style: TextStyle(
-                                            color:
-                                                currentIndex == index ? Colors.white : Colors.black,
-                                            fontSize: 12),
+                                      Expanded(
+                                        child: Center(
+                                          child: Text(
+                                            category?.name ?? "".toUpperCase(),
+                                            style: TextStyle(
+                                              color: currentIndex == index
+                                                  ? Colors.white
+                                                  : Colors.black,
+                                              fontSize: 12,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
                                       ),
-                                      Spacer(),
                                     ],
                                   ),
                                 ),
@@ -376,7 +380,7 @@ class _HomePageState extends State<HomePage> {
                         },
                         children: [
                           ItemsPage(
-                            category: allProductsController.category?.value,
+                            category: allProdCtrlObj.category?.value,
                           )
                         ],
                       ),
@@ -395,17 +399,17 @@ class _HomePageState extends State<HomePage> {
     return Obx(() {
       return CustomButton(
         onTap: () {
-          if (allProductsController.itemCartList.isNotEmpty) {
+          if (prodCartCtrlObj.itemCartList.isNotEmpty) {
             _scaffoldKey.currentState!.openEndDrawer();
           }
         },
         padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
         margin: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
         title: Text(
-          "Item in cart (${allProductsController.itemCartList.length.toString()})",
+          "Cart (${prodCartCtrlObj.itemCartList.length.toString()})",
           style: Theme.of(context).textTheme.bodyText1,
         ),
-        bgColor: allProductsController.itemCartList.isNotEmpty ? buttonColor : Colors.grey[600],
+        bgColor: prodCartCtrlObj.itemCartList.isNotEmpty ? buttonColor : Colors.grey[600],
       );
     });
   }

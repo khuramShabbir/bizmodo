@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '/Components/colorButton.dart';
 import '/Components/textfield.dart';
+import '/Config/app_config.dart';
 import '/Controllers/Auth%20Controller/auth_controller.dart';
 import '/Pages/forget_screen.dart';
 import '/Pages/order_type_selection.dart';
@@ -47,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     FadedScaleAnimation(
                       Text(
-                        "BizModo",
+                        AppConfig.appName,
                         style: Theme.of(context)
                             .textTheme
                             .bodyText1!

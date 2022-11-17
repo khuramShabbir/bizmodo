@@ -11,33 +11,9 @@ import '/utils.dart';
 class AllProductsController extends GetxController {
   AllProducts? allProducts;
   XFile? xFile;
+
   RxBool isLoaded = false.obs;
   Rxn<Datum?>? category = Rxn<Datum?>();
-  Rxn<Product?>? item = Rxn<Product?>();
-
-  RxList<Product?> itemCartList = <Product>[].obs;
-
-  void addToCart(Product? item) {
-    itemCartList.add(item);
-  }
-
-  void removeToCart(item) {
-    itemCartList.remove(item);
-  }
-
-  int getItemsCountInCart(int index) {
-    int items = 0;
-    try {
-      for (var value in allProducts!.data[index].productsList!) {
-        if (value.selectQuantity != 0) {
-          items++;
-        }
-      }
-      return items;
-    } catch (e) {
-      return items;
-    }
-  }
 
   Future<void> fetchAllProducts() async {
     isLoaded.value = false;

@@ -106,9 +106,9 @@ class Data {
   dynamic bankDetails;
   dynamic idProofName;
   dynamic idProofNumber;
-  dynamic deletedAt;
+  DateTime? deletedAt;
   DateTime createdAt;
-  DateTime updatedAt;
+  DateTime? updatedAt;
   bool isAdmin;
   Business business;
 
@@ -201,7 +201,7 @@ class Data {
         "id_proof_number": idProofNumber,
         "deleted_at": deletedAt,
         "created_at": createdAt.toIso8601String(),
-        "updated_at": updatedAt.toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
         "is_admin": isAdmin,
         "business": business.toJson(),
       };

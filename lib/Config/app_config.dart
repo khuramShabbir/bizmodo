@@ -11,8 +11,20 @@ import '/Locale/Languages/swahili.dart';
 import '/Locale/Languages/turkish.dart';
 
 class AppConfig {
-  static final String appName = "Hungerz";
+  static final String appName = "BizModo eMenu";
+
+  // to get the token
+  static String clientId = "7";
+  static String clientSecret = "C30C6RIW3dxtQMQcKRMCXlT3smG106t5OYoaySoN";
+  static String grantType = "password";
+  static String scope = "";
+
+  // api base url
+  static String baseUrl = "https://manage.bizmodo.ae/";
+
   static final bool isDemoMode = true;
+
+  // language
   static const String languageDefault = "en";
   static final Map<String, AppLanguage> languagesSupported = {
     "en": AppLanguage("English", english()),

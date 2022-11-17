@@ -1,7 +1,11 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
+import 'package:bizmodo_emenu/Controllers/ProductController/product_cart_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
+import '/Components/custom_circular_button.dart';
+import '/Controllers/ProductController/all_products_controller.dart';
 import '/Models/ProductsModel/all_products_model.dart';
 import '../Theme/colors.dart';
 
@@ -15,22 +19,23 @@ class ItemInfoPage extends StatefulWidget {
 
 class _ItemInfoPageState extends State<ItemInfoPage> {
   int selectedModifier = -1;
+  final AllProductsController allProductsController = Get.find<AllProductsController>();
   @override
   Widget build(BuildContext context) {
-    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final isPortrait = Get.mediaQuery.orientation == Orientation.portrait;
 
     return SafeArea(
       child: Drawer(
         child: FadedSlideAnimation(
-          SingleChildScrollView(
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              width: MediaQuery.of(context).size.width,
-              color: Theme.of(context).backgroundColor,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(
+          Stack(
+            children: [
+              // Add on Selection
+              SingleChildScrollView(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  width: Get.width,
+                  color: Get.theme.backgroundColor,
+                  child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -39,32 +44,28 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
                         children: [
                           FadedScaleAnimation(
                             Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.3,
+                              width: Get.width,
+                              height: Get.height * 0.3,
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
-                                  image: DecorationImage(
-                                      image: NetworkImage(widget.item?.imageUrl ?? ""),
-                                      fit: BoxFit.cover)),
+                                borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
+                                image: DecorationImage(
+                                  image: NetworkImage(widget.item?.imageUrl ?? ""),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
                             ),
                             durationInMilliseconds: 400,
                           ),
                           Container(
                             margin: EdgeInsets.only(top: 10),
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height * 0.3,
+                            width: Get.width,
+                            height: Get.height * 0.3,
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                   begin: Alignment.bottomCenter,
                                   end: Alignment.topCenter,
-                                  colors: [
-                                    Theme.of(context).scaffoldBackgroundColor,
-                                    transparentColor
-                                  ],
-                                  stops: [
-                                    0.0,
-                                    0.5
-                                  ]),
+                                  colors: [Get.theme.scaffoldBackgroundColor, transparentColor],
+                                  stops: [0.0, 0.5]),
                             ),
                           ),
                         ],
@@ -81,41 +82,39 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
                           itemCount: widget.item?.modifier?.length,
                           shrinkWrap: true,
                           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: isPortrait ? 2 : 2,
-                            crossAxisSpacing: 16,
-                            mainAxisSpacing: 16,
-                            childAspectRatio: 1,
+                            crossAxisCount: isPortrait ? 3 : 4,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 10,
                           ),
                           itemBuilder: (BuildContext context, int index) {
                             final Product? modifier = widget.item?.modifier?[index].productModifier;
 
                             return GestureDetector(
                               onTap: () {
-                                if (selectedModifier == index) {
-                                  selectedModifier == -1;
-                                } else {
-                                  selectedModifier = index;
-                                }
-                                setState(() {});
+                                setState(() {
+                                  if (selectedModifier == index) {
+                                    selectedModifier = -1;
+                                  } else {
+                                    selectedModifier = index;
+                                  }
+                                });
                               },
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                  height: 120,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: selectedModifier == index
-                                        ? Theme.of(context).primaryColor
-                                        : Theme.of(context).scaffoldBackgroundColor,
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      FadedScaleAnimation(
+                              child: Container(
+                                padding: const EdgeInsets.all(5.0),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: selectedModifier == index
+                                      ? Theme.of(context).primaryColor
+                                      : Theme.of(context).scaffoldBackgroundColor,
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Expanded(
+                                      child: FadedScaleAnimation(
                                         CachedNetworkImage(
                                           imageUrl: modifier?.imageUrl ?? "",
                                           imageBuilder: (context, imageProvider) => Container(
-                                            height: 70,
-                                            width: 90,
                                             decoration: BoxDecoration(
                                               image: DecorationImage(
                                                 image: imageProvider,
@@ -127,16 +126,18 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
                                             width: 10,
                                             height: 10,
                                             child: CircularProgressIndicator(
-                                                color: primaryColor, strokeWidth: 1),
+                                              color: primaryColor,
+                                              strokeWidth: 1,
+                                            ),
                                           ),
                                           errorWidget: (context, url, error) => Icon(Icons.error),
                                         ),
                                         durationInMilliseconds: 400,
                                       ),
-                                      Text(modifier?.name ?? ""),
-                                      Spacer(),
-                                    ],
-                                  ),
+                                    ),
+                                    SizedBox(height: 2.5),
+                                    Text(modifier?.name ?? ""),
+                                  ],
                                 ),
                               )
                               /*Padding(
@@ -172,9 +173,26 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
                         )
                     ],
                   ),
-                ],
+                ),
               ),
-            ),
+
+              // Add to cart button
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: CustomButton(
+                  onTap: () {
+                    Get.find<ProductCartController>().addToCart(widget.item);
+                  },
+                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                  bgColor: Theme.of(context).primaryColor,
+                  title: Text(
+                    'Add',
+                    style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 16),
+                  ),
+                  borderRadius: 0,
+                ),
+              )
+            ],
           ),
           beginOffset: Offset(0, 0.3),
           endOffset: Offset(0, 0),

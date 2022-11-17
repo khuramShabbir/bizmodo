@@ -3,11 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:get/get.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get_storage/get_storage.dart';
 
 import '/Controllers/Auth%20Controller/auth_controller.dart';
 import '/Controllers/ProductController/all_products_controller.dart';
+import '/Controllers/ProductController/product_cart_controller.dart';
 import '/Controllers/TableSelectionController/table_management_controller.dart';
 import '/Controllers/order_type_controller.dart';
 import '/Locale/settings_page.dart';
@@ -26,11 +26,12 @@ void main() async {
   Get.put(TableSelectionController());
   Get.put(OrderTypeSelectionController());
   Get.put(AllProductsController());
+  Get.put(ProductCartController());
 
-  runApp(Phoenix(child: HungerzOrdering()));
+  runApp(Phoenix(child: BizModoEMenu()));
 }
 
-class HungerzOrdering extends StatelessWidget {
+class BizModoEMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(

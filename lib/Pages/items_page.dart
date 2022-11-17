@@ -3,7 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '/Controllers/ProductController/all_products_controller.dart';
+import '/Controllers/ProductController/product_cart_controller.dart';
 import '/Models/ProductsModel/all_products_model.dart';
 import '/Pages/item_info.dart';
 import '/Theme/colors.dart';
@@ -17,19 +17,19 @@ class ItemsPage extends StatefulWidget {
 }
 
 class _ItemsPageState extends State<ItemsPage> {
-  final AllProductsController allProductsController = Get.find<AllProductsController>();
+  final ProductCartController prodCartCtrlObj = Get.find<ProductCartController>();
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   Product? item;
 
   @override
   Widget build(BuildContext context) {
-    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final isPortrait = Get.mediaQuery.orientation == Orientation.portrait;
 
     return Scaffold(
       key: _scaffoldKey,
       endDrawer: Drawer(
-        child: ItemInfoPage(allProductsController.item?.value),
+        child: ItemInfoPage(prodCartCtrlObj.item?.value),
       ),
       body: GridView.builder(
           shrinkWrap: true,
@@ -46,8 +46,9 @@ class _ItemsPageState extends State<ItemsPage> {
 
             return Container(
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Theme.of(context).scaffoldBackgroundColor),
+                borderRadius: BorderRadius.circular(10),
+                color: Theme.of(context).scaffoldBackgroundColor,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -55,8 +56,8 @@ class _ItemsPageState extends State<ItemsPage> {
                     flex: 22,
                     child: GestureDetector(
                       onTap: () {
-                        allProductsController.addToCart(item);
-                        allProductsController.item?.value = item;
+                        prodCartCtrlObj.addToCart(item);
+                        prodCartCtrlObj.item?.value = item;
                         if (item!.modifier != null && item!.modifier!.isNotEmpty) {
                           _scaffoldKey.currentState!.openEndDrawer();
                         }
@@ -86,24 +87,26 @@ class _ItemsPageState extends State<ItemsPage> {
                             durationInMilliseconds: 400,
                           ),
                           Align(
-                            alignment: Alignment.topRight,
+                            alignment: Alignment.bottomRight,
                             child: FadedScaleAnimation(
-                              Container(
-                                height: 20,
-                                width: 30,
-                                child: IconButton(
-                                    icon: Icon(
-                                      Icons.info,
-                                      color: Colors.grey.shade400,
-                                      size: 15,
-                                    ),
-                                    onPressed: () {
-                                      allProductsController.item?.value = item;
-                                      item = widget.category!.productsList![index];
-                                      setState(() {});
+                              InkWell(
+                                onTap: () {
+                                  prodCartCtrlObj.item?.value = item;
+                                  item = widget.category!.productsList![index];
+                                  setState(() {});
 
-                                      _scaffoldKey.currentState!.openEndDrawer();
-                                    }),
+                                  _scaffoldKey.currentState!.openEndDrawer();
+                                },
+                                child: Container(
+                                  margin: const EdgeInsets.only(bottom: 10),
+                                  height: 20,
+                                  width: 30,
+                                  child: Icon(
+                                    Icons.view_comfy_alt_rounded,
+                                    color: Colors.grey.shade400,
+                                    size: 30,
+                                  ),
+                                ),
                               ),
                               durationInMilliseconds: 400,
                             ),
@@ -112,7 +115,6 @@ class _ItemsPageState extends State<ItemsPage> {
                       ),
                     ),
                   ),
-                  Spacer(),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
@@ -122,12 +124,10 @@ class _ItemsPageState extends State<ItemsPage> {
                       softWrap: true,
                     ),
                   ),
-                  Spacer(),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text('\$ ' + "${item?.variations?.first.sellPriceIncTax}"),
                   ),
-                  Spacer(),
                 ],
               ),
             );

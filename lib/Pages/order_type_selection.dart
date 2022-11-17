@@ -15,17 +15,17 @@ class OrderTypeSelection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final isPortrait = Get.mediaQuery.orientation == Orientation.portrait;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         centerTitle: true,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-        ),
+        // leading: IconButton(
+        //   onPressed: () {
+        //     Navigator.pop(context);
+        //   },
+        //   icon: Icon(Icons.arrow_back, color: Colors.black),
+        // ),
         title: FadedScaleAnimation(
           RichText(
               text: TextSpan(
@@ -35,11 +35,11 @@ class OrderTypeSelection extends StatelessWidget {
                       .copyWith(letterSpacing: 1, fontWeight: FontWeight.bold),
                   children: <TextSpan>[
                 TextSpan(
-                  text: 'BIZMODO',
+                  text: 'BizModo',
                   style: TextStyle(fontSize: isPortrait ? 12 : 16),
                 ),
                 TextSpan(
-                  text: ' eMENU',
+                  text: ' eMenu',
                   style: TextStyle(
                       color: Theme.of(context).primaryColor, fontSize: isPortrait ? 12 : 16),
                 ),

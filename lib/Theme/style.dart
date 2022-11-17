@@ -7,6 +7,7 @@ final ThemeData appTheme = ThemeData(
   scaffoldBackgroundColor: Colors.white,
   backgroundColor: Color(0xffF8F9FD),
   primaryColor: primaryColor,
+  useMaterial3: true,
   appBarTheme: AppBarTheme(
     color: Colors.transparent,
     elevation: 0.0,
