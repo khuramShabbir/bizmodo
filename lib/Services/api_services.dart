@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:hungerz_ordering/Services/api_urls.dart';
 import 'package:hungerz_ordering/utils.dart';
@@ -48,8 +49,9 @@ class ApiServices {
       return result;
     } else {
       final jd = jsonDecode(result);
+      Get.snackbar("Meaasge", jd["message"]);
 
-      showToast(jd["message"]);
+      // showToast(jd["message"]);
 
       return "";
     }

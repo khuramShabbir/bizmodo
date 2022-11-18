@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:hungerz_ordering/Services/api_services.dart';
@@ -42,7 +44,9 @@ class AuthController extends GetxController {
 
     if (response.isEmpty) return false;
     oauthModel?.value = oauthModelFromJson(response);
-    await showToast("logged in");
+    if (!Platform.isWindows) await showToast("logged in");
+    if (Platform.isWindows) await Get.snackbar("", "logged in");
+
     disposeControllers();
     return true;
   }
