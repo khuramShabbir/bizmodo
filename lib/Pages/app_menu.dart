@@ -155,15 +155,13 @@ class AppMenuSettings extends StatelessWidget {
     } on Exception catch (e) {
       logger.e(e);
       ScaffoldMessenger.of(Get.context!).showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
-        ),
+        SnackBar(content: Text(e.toString())),
       );
     }
   }
 
   void logout() async {
     await AppStorage.box.erase();
-    Get.offAll(Settings());
+    Get.offAll(() => Settings());
   }
 }

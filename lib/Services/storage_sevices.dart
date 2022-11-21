@@ -4,11 +4,11 @@ import '/Models/AuthModels/o_auth_model.dart';
 
 class AppStorage {
   static final box = GetStorage();
-  static String token = "token";
-  static String tableData = "tableCount";
 
   static String lang = "Lang";
 
+  static String token = "token";
+  static String tableData = "tableCount";
   static String products = "products=";
 
   static Future<void> write(String key, dynamic value) async {

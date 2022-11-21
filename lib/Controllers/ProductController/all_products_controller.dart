@@ -1,33 +1,27 @@
+import 'package:bizmodo_emenu/Services/storage_sevices.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '/Models/ProductsModel/all_products_model.dart';
 import '/Services/api_services.dart';
 import '/Services/api_urls.dart';
-import '/Services/storage_sevices.dart';
-import '/const.dart';
 import '/utils.dart';
 
 class AllProductsController extends GetxController {
-  AllProducts? allProducts;
-  XFile? xFile;
-
-  RxBool isLoaded = false.obs;
-  Rxn<Datum?>? category = Rxn<Datum?>();
+  RxBool isFetchingProduct = false.obs;
+  CategoriesProductsModel? allCategoriesProductsData;
 
   Future<void> fetchAllProducts() async {
-    isLoaded.value = false;
+    isFetchingProduct.value = true;
     String response = await ApiServices.getMethod(feedUrl: ApiUrls.allProducts);
     if (response.isEmpty) return;
     await AppStorage.write(AppStorage.products, response);
-    getAllProductsFromStorage();
-    isLoaded.value = true;
+    getAllProductsFromStorage(res: response);
   }
 
-  void getAllProductsFromStorage() async {
-    isLoaded.value = false;
-    allProducts = allProductsFromJson(AppStorage.read(AppStorage.products));
-    isLoaded.value = true;
+  void getAllProductsFromStorage({res}) async {
+    allCategoriesProductsData =
+        categoriesProductsModelFromJson(res != null ? res : AppStorage.read(AppStorage.products));
+    isFetchingProduct.value = false;
   }
 
   Future<bool> createOrder() async {
@@ -121,23 +115,4 @@ class AllProductsController extends GetxController {
 
     return true;
   }
-
-  ImagePicker picker = ImagePicker();
-  Future<void> getImages() async {
-    xFile = null;
-    String choice = await AppConst.chooseImageSource();
-    if (choice.isEmpty) {
-      return;
-    } else if (choice == "Camera") {
-      xFile = (await picker.pickImage(source: ImageSource.camera, imageQuality: 50));
-    } else if (choice == "Gallery") {
-      xFile = (await picker.pickImage(source: ImageSource.gallery, imageQuality: 50));
-    }
-  }
-}
-
-class Cart {
-  final int id;
-  final String name;
-  Cart({required this.id, required this.name});
 }

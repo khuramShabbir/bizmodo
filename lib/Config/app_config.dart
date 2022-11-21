@@ -14,8 +14,8 @@ class AppConfig {
   static final String appName = "BizModo eMenu";
 
   // to get the token
-  static String clientId = "7";
-  static String clientSecret = "C30C6RIW3dxtQMQcKRMCXlT3smG106t5OYoaySoN";
+  static String clientId = "8";
+  static String clientSecret = "9aiVfedZtbWltUoT1s5s8oVuHyOCcBSnF3GpvRNL";
   static String grantType = "password";
   static String scope = "";
 

@@ -20,18 +20,26 @@ showToast(String msg) async {
 
 showProgress() {
   Get.defaultDialog(
-      title: "",
-      content: Container(
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
-        child: Center(
-          child: CircularProgressIndicator(
-            backgroundColor: Colors.grey,
-            color: primaryColor,
-          ),
+    title: "Loading",
+    content: Container(
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
+      child: progressIndicator(),
+    ),
+    barrierDismissible: true,
+  );
+}
+
+progressIndicator({double? height, double? width}) => Center(
+      child: SizedBox(
+        height: height,
+        width: width,
+        child: CircularProgressIndicator(
+          backgroundColor: Colors.grey,
+          color: primaryColor,
+          strokeWidth: 1.5,
         ),
       ),
-      barrierDismissible: true);
-}
+    );
 
 stopProgress() {
   if (Get.isDialogOpen!) Get.back();

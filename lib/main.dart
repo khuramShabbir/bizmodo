@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
+// import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -28,7 +28,12 @@ void main() async {
   Get.put(AllProductsController());
   Get.put(ProductCartController());
 
-  runApp(Phoenix(child: BizModoEMenu()));
+  runApp(
+    // Phoenix(
+    //   child:
+    BizModoEMenu(),
+    // ),
+  );
 }
 
 class BizModoEMenu extends StatelessWidget {

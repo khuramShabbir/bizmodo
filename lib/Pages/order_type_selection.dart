@@ -78,7 +78,7 @@ class OrderTypeSelection extends StatelessWidget {
                       Column(
                         children: [
                           formField(
-                            text: "Name",
+                            text: "Search Customer",
                             validator: (String? v) {
                               if (v!.isEmpty)
                                 return "*field required";
@@ -94,9 +94,10 @@ class OrderTypeSelection extends StatelessWidget {
                               else
                                 return null;
                             },
-                            text: "Mobile",
+                            text: "Customer Name",
                             controller: orderCtrl.mobileNumberCtrl,
                           ),
+                          // mobile number
                           formField(
                             validator: (String? v) {
                               if (v!.isEmpty)
@@ -104,7 +105,19 @@ class OrderTypeSelection extends StatelessWidget {
                               else
                                 return null;
                             },
-                            text: "Identity",
+                            text: "Mobile Number",
+                            controller: orderCtrl.identityCtrl,
+                          ),
+
+                          // custom ID 1
+                          formField(
+                            text: "Custom ID 1",
+                            controller: orderCtrl.identityCtrl,
+                          ),
+
+                          // custom ID 2
+                          formField(
+                            text: "Custom ID 2",
                             controller: orderCtrl.identityCtrl,
                           ),
                         ],
@@ -237,6 +250,7 @@ class OrderTypeSelection extends StatelessWidget {
             validator: validator,
             controller: controller,
             title: text,
+            labelText: text,
           ),
         ),
       ),

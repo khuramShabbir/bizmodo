@@ -30,7 +30,7 @@ class AuthController extends GetxController {
     if (response.isEmpty) return false;
     oAuthData = oauthModelFromJson(response);
     await AppStorage.write(AppStorage.token, response);
-    disposeControllers();
+    // disposeControllers();
     return true;
   }
 
@@ -43,7 +43,7 @@ class AuthController extends GetxController {
     //Done: login user data parsing issue resolved.
     loggedInUserData = loggedInUserDetailFromJson(response);
     await showToast("logged in");
-    disposeControllers();
+    // disposeControllers();
     return true;
   }
 

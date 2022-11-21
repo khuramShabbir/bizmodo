@@ -69,9 +69,9 @@ class Data {
 
   int id;
   String userType;
-  dynamic surname;
+  String? surname;
   String firstName;
-  dynamic lastName;
+  String? lastName;
   String username;
   String email;
   String language;

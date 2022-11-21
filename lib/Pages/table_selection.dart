@@ -107,6 +107,8 @@ class _TableSelectionPageState extends State<TableSelectionPage> {
                         onTap: () async {
                           if (data.available == "Busy") {
                             showToast("Please choose Free table");
+
+                            /// TODO: navigate to order details screen
                             return;
                           }
 
