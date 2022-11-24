@@ -1,16 +1,15 @@
-# hungerz_ordering
+# BizModo_eMenu
 
-A new Flutter application.
+BizModo eMenu is a Waiter Application for BizModo POS application by [BizModo](https://bizmodo.io), a brand of [DynamicTech IT Solution LLC](https://dynamictech.ae).
 
-## Getting Started
+## Installation & Documentation
+You will find installation guide and documentation in the downloaded zip file.
+Also, For complete updated documentation of the BizModo please visit online [documentation guide](http://bizmodo.io/docs/).
 
-This project is a starting point for a Flutter application.
+## Security Vulnerabilities
 
-A few resources to get you started if this is your first Flutter project:
+If you discover a security vulnerability within BizModo, please send an e-mail to support at bizmodo@dynamictech.ae. All security vulnerabilities will be promptly addressed.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+## License
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+The BizModo POS software is licensed under the [DynamicTech license](https://dynamictech.ae/terms-and-conditions).
