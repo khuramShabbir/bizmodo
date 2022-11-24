@@ -1,6 +1,6 @@
 # BizModo_eMenu
 
-BizModo eMenu is a Waiter Application for BizModo POS application by [BizModo](https://bizmodo.io), a brand of [DynamicTech IT Solution LLC](https://dynamictech.ae).
+BizModo eMenu is a Waiter App for BizModo POS application by [BizModo](https://bizmodo.io), a brand of [DynamicTech IT Solution LLC](https://dynamictech.ae).
 
 ## Installation & Documentation
 You will find installation guide and documentation in the downloaded zip file.
