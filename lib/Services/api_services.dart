@@ -7,7 +7,7 @@ import '/utils.dart';
 import 'storage_sevices.dart';
 
 class ApiServices {
-  static Future<String> getMethod({required String feedUrl}) async {
+  static Future<String?> getMethod({required String feedUrl}) async {
     String token = AppStorage.getUserToken().accessToken;
 
     var headers = {
@@ -24,12 +24,11 @@ class ApiServices {
     logger.i(result);
     if (response.statusCode == 200) {
       return result;
-    } else {
-      return "";
     }
+    return null;
   }
 
-  static Future<String> postMethod({
+  static Future<String?> postMethod({
     required feedUrl,
     required Map<String, String>? fields,
   }) async {
@@ -51,7 +50,7 @@ class ApiServices {
 
       showToast(jd["message"]);
 
-      return "";
+      return null;
     }
   }
 }

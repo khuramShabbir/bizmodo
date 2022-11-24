@@ -1,3 +1,4 @@
+import 'package:bizmodo_emenu/Components/counter_with_add_remove_button.dart';
 import 'package:bizmodo_emenu/Models/ProductsModel/all_products_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -129,43 +130,62 @@ class _MultiSelectChipState extends State<MultiSelectChip> {
                 },
               ),
               if (widget.initChoices.contains(item))
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        for (int i = 0; i < widget.initChoices.length; i++) {
-                          if (widget.initChoices[i].id == item.id) {
-                            widget.initChoices.removeAt(i);
-                            break;
-                          }
-                        }
-                        setState(() {});
-                        widget.onSelectionChanged(widget.initChoices);
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(2.5),
-                        child: Icon(Icons.remove),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: Text(calculateItemVariationLength(item)),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          widget.initChoices.add(item);
-                        });
-                        widget.onSelectionChanged(widget.initChoices);
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(2.5),
-                        child: Icon(Icons.add),
-                      ),
-                    ),
-                  ],
+                CounterWithAddRemoveButton(
+                  counter: calculateItemVariationLength(item),
+                  removeTabFun: () {
+                    for (int i = 0; i < widget.initChoices.length; i++) {
+                      if (widget.initChoices[i].id == item.id) {
+                        widget.initChoices.removeAt(i);
+                        break;
+                      }
+                    }
+                    setState(() {});
+                    widget.onSelectionChanged(widget.initChoices);
+                  },
+                  addTabFun: () {
+                    setState(() {
+                      widget.initChoices.add(item);
+                    });
+                    widget.onSelectionChanged(widget.initChoices);
+                  },
                 ),
+              // Row(
+              //   mainAxisSize: MainAxisSize.min,
+              //   children: [
+              //     InkWell(
+              //       onTap: () {
+              //         for (int i = 0; i < widget.initChoices.length; i++) {
+              //           if (widget.initChoices[i].id == item.id) {
+              //             widget.initChoices.removeAt(i);
+              //             break;
+              //           }
+              //         }
+              //         setState(() {});
+              //         widget.onSelectionChanged(widget.initChoices);
+              //       },
+              //       child: Padding(
+              //         padding: const EdgeInsets.all(2.5),
+              //         child: Icon(Icons.remove),
+              //       ),
+              //     ),
+              //     Padding(
+              //       padding: const EdgeInsets.symmetric(horizontal: 5),
+              //       child: Text(calculateItemVariationLength(item)),
+              //     ),
+              //     InkWell(
+              //       onTap: () {
+              //         setState(() {
+              //           widget.initChoices.add(item);
+              //         });
+              //         widget.onSelectionChanged(widget.initChoices);
+              //       },
+              //       child: Padding(
+              //         padding: const EdgeInsets.all(2.5),
+              //         child: Icon(Icons.add),
+              //       ),
+              //     ),
+              //   ],
+              // ),
             ],
           ),
         ),

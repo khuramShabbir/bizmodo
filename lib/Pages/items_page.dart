@@ -1,15 +1,15 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
-import 'package:bizmodo_emenu/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '/Controllers/ProductController/product_cart_controller.dart';
 import '/Models/ProductsModel/all_products_model.dart';
+import '/utils.dart';
 import 'item_info.dart';
 
 class ItemsPage extends StatefulWidget {
-  final CategoryDataModel? category;
+  final CategoryDataModel category;
   ItemsPage({required this.category, Key? key}) : super(key: key);
 
   @override
@@ -36,7 +36,7 @@ class _ItemsPageState extends State<ItemsPage> {
       body: GridView.builder(
         shrinkWrap: true,
         padding: EdgeInsetsDirectional.only(top: 5, bottom: 5, start: 10, end: 10),
-        itemCount: widget.category?.products.length ?? 0,
+        itemCount: widget.category.products.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: isPortrait ? 2 : 4,
           crossAxisSpacing: 10,
@@ -44,20 +44,20 @@ class _ItemsPageState extends State<ItemsPage> {
           childAspectRatio: 0.7,
         ),
         itemBuilder: (context, index) {
-          ProductModel? item = widget.category?.products[index];
+          ProductModel item = widget.category.products[index];
 
           return Card(
             clipBehavior: Clip.hardEdge,
             color: Get.theme.scaffoldBackgroundColor,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            child: InkWell(
+            child: GestureDetector(
               onTap: () {
                 prodCartCtrlObj.item?.value = item;
-                if (item!.modifier.isNotEmpty) {
+                if (item.modifier.isNotEmpty) {
                   // _scaffoldKey.currentState!.openEndDrawer();
                   Get.to(() => ItemInfoPage(prodCartCtrlObj.item!.value!));
                 } else {
-                  prodCartCtrlObj.addToCart(item);
+                  prodCartCtrlObj.updateCart(item, isAdd: true);
                 }
                 setState(() {});
               },
@@ -67,9 +67,10 @@ class _ItemsPageState extends State<ItemsPage> {
                   Expanded(
                     child: Stack(
                       children: [
+                        // product image
                         FadedScaleAnimation(
                           CachedNetworkImage(
-                            imageUrl: item?.imageUrl ?? "",
+                            imageUrl: item.imageUrl ?? "",
                             imageBuilder: (context, imageProvider) => Container(
                               decoration: BoxDecoration(
                                 image: DecorationImage(
@@ -83,13 +84,14 @@ class _ItemsPageState extends State<ItemsPage> {
                           ),
                           durationInMilliseconds: 400,
                         ),
+                        // product details page button
                         Align(
                           alignment: Alignment.topRight,
                           child: FadedScaleAnimation(
                             InkWell(
                               onTap: () {
                                 prodCartCtrlObj.item?.value = item;
-                                item = widget.category!.products[index];
+                                item = widget.category.products[index];
                                 setState(() {});
 
                                 // _scaffoldKey.currentState!.openEndDrawer();
@@ -109,6 +111,82 @@ class _ItemsPageState extends State<ItemsPage> {
                             durationInMilliseconds: 400,
                           ),
                         ),
+                        // product shade effect if item in cart
+                        GetBuilder(
+                          builder: (ProductCartController prodCartCtrlObj) {
+                            return prodCartCtrlObj.isItemInCart(item.id)
+                                ? Opacity(
+                                    opacity: 0.8,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.vertical(top: Radius.circular(10)),
+                                        gradient: LinearGradient(
+                                            begin: Alignment.bottomCenter,
+                                            end: Alignment.center,
+                                            colors: [
+                                              Get.theme.primaryColor,
+                                              Colors.transparent,
+                                            ],
+                                            stops: [
+                                              0.2,
+                                              0.75,
+                                            ]),
+                                      ),
+                                    ),
+                                  )
+                                : SizedBox.shrink();
+                          },
+                        ),
+                        // counts of and item if in cart
+                        GetBuilder(builder: (ProductCartController prodCartCtrlObj) {
+                          return prodCartCtrlObj.isItemInCart(item.id)
+                              ? Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 0.0),
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(vertical: 6, horizontal: 6),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          // GestureDetector(
+                                          //   onTap: () {
+                                          //     if (foodItems[index].count >= 1)
+                                          //       setState(() {
+                                          //         foodItems[index].count--;
+                                          //       });
+                                          //   },
+                                          //   child: Icon(Icons.remove, color: Colors.white, size: 16),
+                                          // ),
+                                          // SizedBox(width: 8),
+                                          CircleAvatar(
+                                            radius: 10,
+                                            // backgroundColor: buttonColor,
+                                            child: Text(
+                                              prodCartCtrlObj.countItemInCart(item.id),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .subtitle1!
+                                                  .copyWith(fontSize: 10, color: Colors.white),
+                                            ),
+                                          ),
+                                          // SizedBox(width: 8),
+                                          // GestureDetector(
+                                          //   onTap: () {
+                                          //     setState(() {
+                                          //       foodItems[index].count++;
+                                          //     });
+                                          //   },
+                                          //   child: Icon(Icons.add, color: Colors.white, size: 16),
+                                          // ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : SizedBox.shrink();
+                        }),
                       ],
                     ),
                   ),
@@ -119,16 +197,16 @@ class _ItemsPageState extends State<ItemsPage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Text(
-                      item?.name ?? "",
+                      item.name ?? "",
                       style: Get.theme.textTheme.subtitle1!.copyWith(fontSize: 14),
                       overflow: TextOverflow.ellipsis,
                       softWrap: true,
                     ),
                   ),
-                  if (item != null && item!.variations.isNotEmpty)
+                  if (item != null && item.variations.isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Text('\$ ' + "${item?.variations.first.sellPriceIncTax}"),
+                      child: Text('\$ ' + "${item.variations.first.sellPriceIncTax}"),
                     ),
                   const SizedBox(height: 10),
                 ],

@@ -190,10 +190,14 @@ class _HomePageState extends State<HomePage> {
                           });
                         },
                         children: [
-                          ItemsPage(
-                            category: allProdCtrlObj
-                                .allCategoriesProductsData?.categories[categoryCurrentIndex],
-                          )
+                          if (allProdCtrlObj.allCategoriesProductsData != null &&
+                              allProdCtrlObj.allCategoriesProductsData!.categories.isNotEmpty)
+                            ItemsPage(
+                              category: allProdCtrlObj
+                                  .allCategoriesProductsData!.categories[categoryCurrentIndex],
+                            )
+                          else
+                            Text('Items are not available!'),
                         ],
                       ),
                     ),

@@ -25,9 +25,9 @@ class AuthController extends GetxController {
       'username': userNameCtrl.text,
       'password': passwordCtrl.text,
     };
-    String response = await ApiServices.postMethod(feedUrl: ApiUrls.oauthToken, fields: fields);
+    String? response = await ApiServices.postMethod(feedUrl: ApiUrls.oauthToken, fields: fields);
     stopProgress();
-    if (response.isEmpty) return false;
+    if (response == null) return false;
     oAuthData = oauthModelFromJson(response);
     await AppStorage.write(AppStorage.token, response);
     // disposeControllers();
@@ -36,10 +36,10 @@ class AuthController extends GetxController {
 
   Future<bool> getLoginUserDetail() async {
     showProgress();
-    String response = await ApiServices.getMethod(feedUrl: ApiUrls.getLoggedInUserDetail);
+    String? response = await ApiServices.getMethod(feedUrl: ApiUrls.getLoggedInUserDetail);
     stopProgress();
 
-    if (response.isEmpty) return false;
+    if (response == null) return false;
     //Done: login user data parsing issue resolved.
     loggedInUserData = loggedInUserDetailFromJson(response);
     await showToast("logged in");

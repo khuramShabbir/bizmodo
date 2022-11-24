@@ -1,4 +1,5 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
+import 'package:bizmodo_emenu/Components/counter_with_add_remove_button.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,8 +10,6 @@ import '/Locale/locales.dart';
 import '/Models/ProductsModel/all_products_model.dart';
 import '/Pages/item_info.dart';
 import '/Pages/orderPlaced.dart';
-import '/Theme/colors.dart';
-import '/utils.dart';
 
 class CartPage extends StatelessWidget {
   const CartPage({Key? key}) : super(key: key);
@@ -20,7 +19,7 @@ class CartPage extends StatelessWidget {
     var locale = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(title: Text('Cart')),
       body: Stack(
         children: [
           // List of cart items
@@ -51,91 +50,56 @@ class CartPage extends StatelessWidget {
                     itemBuilder: (context, index) {
                       ProductModel product = prodCartCtrlObj.itemCartList[index];
 
-                      return ListTile(
-                        contentPadding: EdgeInsets.symmetric(vertical: 2, horizontal: 10),
-                        leading: GestureDetector(
-                          onTap: () {
-                            if (prodCartCtrlObj.item != null) {
-                              Get.to(() => ItemInfoPage(prodCartCtrlObj.item!.value!));
-                            }
-                          },
-                          child: FadedScaleAnimation(
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
+                      return Stack(
+                        children: [
+                          ListTile(
+                            contentPadding: EdgeInsets.symmetric(vertical: 2, horizontal: 10),
+                            leading: GestureDetector(
+                              onTap: () {
+                                if (prodCartCtrlObj.item != null) {
+                                  Get.to(() => ItemInfoPage(prodCartCtrlObj.item!.value!));
+                                }
+                              },
                               child: FadedScaleAnimation(
-                                CachedNetworkImage(
-                                  imageUrl: '${product.imageUrl}',
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: FadedScaleAnimation(
+                                    CachedNetworkImage(imageUrl: '${product.imageUrl}'),
+                                    durationInMilliseconds: 400,
+                                  ),
                                 ),
                                 durationInMilliseconds: 400,
                               ),
                             ),
-                            durationInMilliseconds: 400,
-                          ),
-                        ),
-                        title: Padding(
-                          padding: const EdgeInsets.only(bottom: 10.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                product.name ?? "",
-                                style: Get.theme.textTheme.subtitle1!.copyWith(fontSize: 14),
+                            title: Padding(
+                              padding: const EdgeInsets.only(bottom: 10.0),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    '${product.name}',
+                                    style: Get.theme.textTheme.subtitle1!.copyWith(fontSize: 14),
+                                  ),
+                                  SizedBox(width: 8),
+                                ],
                               ),
-                              SizedBox(width: 8),
-                            ],
-                          ),
-                        ),
-                        subtitle: Column(
-                          children: [
-                            Row(
+                            ),
+                            subtitle: Row(
                               children: [
-                                Container(
-                                  padding: EdgeInsets.symmetric(vertical: 6, horizontal: 6),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    border: Border.all(color: newOrderColor, width: 0.2),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          prodCartCtrlObj.removeToCart(product);
-                                          if (product.quantity > 0) {
-                                            product.quantity--;
-                                            logger.i(product.quantity);
-                                            prodCartCtrlObj.update();
-                                          }
-                                        },
-                                        child: Icon(
-                                          Icons.remove,
-                                          color: newOrderColor,
-                                          size: 16,
-                                        ),
-                                      ),
-                                      SizedBox(width: 8),
-                                      Text(
-                                        '${product.quantity}',
-                                        style:
-                                            Get.theme.textTheme.subtitle1!.copyWith(fontSize: 12),
-                                      ),
-                                      SizedBox(width: 8),
-                                      GestureDetector(
-                                        onTap: () {
-                                          if (product.quantity != 0) {
-                                            product.quantity++;
-                                            logger.i(product.quantity);
-                                            prodCartCtrlObj.update();
-                                          }
-                                        },
-                                        child: Icon(
-                                          Icons.add,
-                                          color: newOrderColor,
-                                          size: 16,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                CounterWithAddRemoveButton(
+                                  removeTabFun: () {
+                                    if (product.quantity > 1) {
+                                      prodCartCtrlObj.removeItemQuantity(product);
+                                    } else if (product.quantity == 1) {
+                                      prodCartCtrlObj.deleteFromCart(product);
+                                    }
+                                  },
+                                  counter: '${product.quantity}',
+                                  addTabFun: () {
+                                    if (product.quantity != 0) {
+                                      prodCartCtrlObj.addItemQuantity(product);
+                                    }
+                                  },
                                 ),
                                 Spacer(),
                                 if (product.variations.isNotEmpty)
@@ -149,8 +113,16 @@ class CartPage extends StatelessWidget {
                                   )
                               ],
                             ),
-                          ],
-                        ),
+                          ),
+                          Positioned(
+                            top: 2.5,
+                            right: 2.5,
+                            child: GestureDetector(
+                              onTap: () => prodCartCtrlObj.deleteFromCart(product),
+                              child: Icon(Icons.close_rounded),
+                            ),
+                          ),
+                        ],
                       );
                     });
               }),

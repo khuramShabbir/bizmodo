@@ -12,8 +12,8 @@ class AllProductsController extends GetxController {
 
   Future<void> fetchAllProducts() async {
     isFetchingProduct.value = true;
-    String response = await ApiServices.getMethod(feedUrl: ApiUrls.allProducts);
-    if (response.isEmpty) return;
+    String? response = await ApiServices.getMethod(feedUrl: ApiUrls.allProducts);
+    if (response == null) return;
     await AppStorage.write(AppStorage.products, response);
     getAllProductsFromStorage(res: response);
   }
@@ -104,10 +104,10 @@ class AllProductsController extends GetxController {
       ].toString()
     };
 
-    String response = await ApiServices.postMethod(feedUrl: ApiUrls.createOrder, fields: fields);
+    String? response = await ApiServices.postMethod(feedUrl: ApiUrls.createOrder, fields: fields);
     logger.i(response);
 
-    if (response.isEmpty) {
+    if (response == null) {
       showToast("Something went wrong");
 
       return false;

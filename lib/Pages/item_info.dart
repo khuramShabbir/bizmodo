@@ -283,13 +283,13 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
                 alignment: Alignment.bottomCenter,
                 child: CustomButton(
                   onTap: () {
-                    Get.find<ProductCartController>().addToCart(widget.item);
+                    Get.find<ProductCartController>().updateCart(widget.item, isAdd: true);
                   },
                   padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-                  bgColor: Theme.of(context).primaryColor,
+                  bgColor: Get.theme.primaryColor,
                   title: Text(
                     'Add',
-                    style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 16),
+                    style: Get.theme.textTheme.bodyText1!.copyWith(fontSize: 16),
                   ),
                   borderRadius: 0,
                 ),

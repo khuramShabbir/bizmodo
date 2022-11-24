@@ -1,36 +1,43 @@
-import 'dart:convert';
-
 import 'package:get/get.dart';
 
 import '/Models/TableManagemenModel/table_management_model.dart';
+import '/Services/api_services.dart';
+import '/Services/api_urls.dart';
 import '/Services/storage_sevices.dart';
+import '/utils.dart';
 
 class TableSelectionController extends GetxController {
-  int tableCount = 10;
-  List<String> tableList = [];
-  RxBool isTableCreated = false.obs;
-  RxList<TableDetail> tableDetailModel = <TableDetail>[].obs;
+  bool isTablesLoaded = true;
+  TableModel? tableRecord;
 
-  void createTable() async {
-    for (int i = 1; i <= tableCount; i++) {
-      Map<String, dynamic> table = TableDetail(
-        tables: Tables(
-          tableId: i.toString(),
-          color: 0xFFFFFFFF,
-          time: null,
-          available: 'Free',
-        ),
-      ).toJson();
-
-      final je = jsonEncode(table);
-      tableList.add(je);
+  void fetchTables() async {
+    if (AppStorage.box.hasData(AppStorage.tableData)) {
+      isTablesLoaded = true;
+      getTableDetail();
+    } else {
+      isTablesLoaded = false;
+      update();
     }
-    await AppStorage.write(AppStorage.tableData, tableList.toString());
-    isTableCreated.value = true;
+    await ApiServices.getMethod(feedUrl: ApiUrls.getTables).then((_res) async {
+      isTablesLoaded = true;
+      update();
+      if (_res == null) return;
+      await AppStorage.write(AppStorage.tableData, _res);
+      getTableDetail();
+      update();
+    }).onError((error, stackTrace) {
+      isTablesLoaded = true;
+      update();
+      print('Error => $error');
+      logger.e('StackTrace => $stackTrace');
+    });
   }
 
   void getTableDetail() {
-    final String data = AppStorage.read(AppStorage.tableData);
-    tableDetailModel.value = tableDetailFromJson(data);
+    String? _storedTableData = AppStorage.read(AppStorage.tableData);
+    if (_storedTableData != null) {
+      tableRecord = tableModelFromJson(_storedTableData);
+      update();
+    }
   }
 }
